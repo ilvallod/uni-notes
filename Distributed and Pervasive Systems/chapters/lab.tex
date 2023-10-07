@@ -1,0 +1,369 @@
+\section{Laboratory}
+
+%Multi-threaded Servers and Thread Synchronization
+\subsection{Multi-threaded Servers and Thread Synchronization}
+\paragraph{Client-Server Paradigm}
+A client asks a specific service to a server
+\begin{itemize}
+    \item Server creates a \textit{listening socket} specifying the service port
+    \item Client creates a socket specifying the server's address and the service port
+    \item When an incoming connection is received, the server creates an \textit{established socket} and communication takes place on it
+\end{itemize}
+\paragraph{Iterative Servers}
+Can handle one request at time. The requests are queued and the server will sequentially accept and handle each request
+
+\paragraph{Threads}
+Different execution sequences within the same process sharing the same memory space. To create a new thread in Java
+\begin{itemize}
+    \item \textit{Thread inheriting}, extend the \texttt{Thread} class and override the \texttt{run()} method with the thread's code. Then we create an instance of the custom Thread class and call its \texttt{start()} method to begin execution of the thread in a new thread context.
+    \begin{minted}
+        [
+        frame=lines,
+        framesep=2mm,
+        baselinestretch=1.2,
+        bgcolor=white,
+        fontsize=\footnotesize,
+        linenos
+        ]{java}
+        //creation
+        public class MyThread extends Thread{
+            public void run()
+        }
+
+        //invocation
+        MyThread thread = new MyThread()
+        thread.start()
+    \end{minted}
+    \item \textit{Implementing Runnable}, implement the \texttt{Runnable} interface, define a constructor for the thread, and implement the \texttt{run()} method. To start the thread, we create a Thread object and pass the instance of our Runnable class to its constructor. Then, we call the start() method on the Thread object.
+    \begin{minted}
+        [
+        frame=lines,
+        framesep=2mm,
+        baselinestretch=1.2,
+        bgcolor=white,
+        fontsize=\footnotesize,
+        linenos
+        ]{java}
+        //creation
+        public class RunnableThread implements Runnable{
+            public void run()
+        }
+
+        //invocation
+        Thread thread = new Thread(new RunnableThread())
+        thread.start()
+    \end{minted}
+\end{itemize}
+
+The main difference between extending the Thread class and implementing the Runnable interface in thread creation lies in inheritance and flexibility. Extending the Thread class allows direct inheritance of all Thread functionalities, while implementing the Runnable interface requires creating a separate instance of the Thread class and passing the Runnable instance to its constructor. Implementing the Runnable interface provides more flexibility as it allows the child class to extend other classes if needed and promotes better separation of concerns.
+
+After the \texttt{run()} method finishes, the thread also terminates its execution.
+
+\paragraph{Concurrent Servers: dispatcher-worker model}
+Different clients can concurrently send different requests to the port the server is listening on. \uline{It runs a different thread for each connection with a client}
+
+\paragraph{Concurrent programming}
+The threads of a program have access to the same memory space, allowing for efficient data exchange. However, this can lead to problems such as \textit{thread interference}\footnote{Thread interference occurs when two or more threads simultaneously access the same shared variable and try to modify it concurrently} and \textit{memory inconsistency}\footnote{Memory inconsistency occurs when threads access the same variables without synchronization and without taking care of the access order. Therefore, a thread may see a non-updated value of a shared variable, which can lead to logical errors.}. To prevent these issues, thread synchronization is necessary.
+
+\paragraph{Thread Synchronization - Synchronized}
+Every object instance in Java has an associated \textit{intrinsic lock} that is also called \textit{monitor}. If a method is declared as \texttt{synchronized}, before it is executed, the method acquires the intrinsic lock. This ensures that only one thread can access the object at a time.
+
+When a thread executes a synchronized method on an object, the following happens
+\begin{itemize}
+    \item The value of the intrinsic lock associated with the object is checked
+    \item If is available, the value is changed to not available and the method is executed
+    \item Once the method finishes executing, the value of the intrinsic lock is changed back to available
+    \item If the lock is not available, the thread \textit{waits} until the lock becomes available
+\end{itemize}
+
+To synchronize primitive types, we can create dummy objects that are used only for their lock. Also a static method can be defined synchronized, which means that the method is locked not on a specific object instance, but on the class itself. This means that only one thread can execute the synchronized static method for a given class at any given time.
+
+The use of synchronized grants two properties:
+\begin{enumerate}
+    \item \textit{Mutual exclusion}, only one thread at a time can obtain a specific lock
+    \item \textit{Visibility}, the changes applied to the shared data before the lock is released must be visible to the threads that will acquire the lock later
+\end{enumerate}
+
+\paragraph{Deadlock}
+Reciprocal waiting. Possible solution: wait with a timeout parameter
+
+\paragraph{Volatile}
+This keyword can be assigned to variables and \uline{it grants visibility but not mutual exclusion}, making it a \textit{lighter version of synchronized}. The volatile keyword ensures that reads and writes to a volatile variable are done directly on the main memory, bypassing the thread's local cache. This guarantees that changes made to the volatile variable by one thread are immediately visible to other threads.
+
+%Machine to Machine Communication
+\subsection{Machine to Machine Communication}
+In a distributed system, processes that runs on different machines connected through a network have to communicate. The communication occurs through messages exchange, messages are exchanged through sockets
+
+\uline{It is necessary to agree on a common format to represent data}
+
+\paragraph{Marshalling and unmarshalling}
+When data is transmitted, it needs to be assembled in a specific format that is suitable for transmission. This process is called \textit{marshalling}, and it is performed by the party transmitting the data. On the other hand, the party receiving the data performs the \textit{unmarshalling} process, which involves translating the received data into a readable format. For this process to work seamlessly, both parties need to agree on a common external data format that ensures interoperability. Three commonly used formats for this purpose are
+\begin{itemize}
+    \item \textit{XML: eXtensible Markup Language}, is a standard for representing data in a textual format, offering the advantage of creating customized subsets (dialect) of the language to accurately describe specific information. Its powerful query system based on XPath and XQuery allows extracting only desired information from large structured data sets.
+    \item \textit{JSON: Javascript Object Notation}. Is a lightweight data-interchange format. Newer designed specifically for Javascript, but independently of it. This standard is both human-and-machine-readable and easier to read than XML.
+    \item \textit{Protocol Buffers}
+\end{itemize}
+
+\paragraph{Gson library}
+A Google library used to convert Java objects into JSON representations and viceversa. It works with any type of pre-existing Java object, even objects we don’t have the code of
+\begin{itemize}
+    \item \texttt{toJson()} method to convert an object to a JSON string
+    \item \texttt{fromJson()} method to convert a JSON string to an instance of an object
+\end{itemize}
+
+%Google's protocol buffer
+\subsubsection{Google's protocol buffer}
+Google has suggested a way to encode structured information in a faster and more efficient manner than with conventional XML or JSON formats. This involves converting the data into binary form, which allows for \uline{smaller file sizes and faster processing times}.
+
+\paragraph{How to use protocol buffer}
+\begin{enumerate}
+    \item Define the format of the messages to be serialized throught a \texttt{.proto} file, these files must be shared among the programs that have to communicate
+    \item Build Gradle to run the Protocol Buffers compiler that automatically generates the marshalling and unmarshalling code
+    \item Then, it’s possible to write code to send and receive messages
+\end{enumerate}
+
+\paragraph{The language}
+To define a message in our model, we need to use the \texttt{message} keyword. Every message is a record that contains different fields and it can contain other messages. Each part of the message needs to be labeled as either 
+\begin{itemize}
+    \item \texttt{required}, mandatory
+    \item \texttt{optional}, meaning it may or may not be present
+    \item \texttt{repeated}, allowing for a variable number of occurrences
+\end{itemize}
+
+\paragraph{Tags}
+To identify the fields in the binary format and match them during serialization and deserialization. Tags are represented by integer numbers, with tags from $1$ to $15$ being encoded through $1$ byte and tags from $16$ to $2047$ requiring $2$ bytes. It's important to note that tags must not be changed once a message is being used within a system.
+
+\begin{minted}
+        [
+        frame=lines,
+        framesep=2mm,
+        baselinestretch=1.2,
+        bgcolor=white,
+        fontsize=\footnotesize,
+        linenos
+        ]{java}
+        //protocol buffer example
+        syntax = "proto3";
+
+        message Actor {
+        string name = 1;
+        int32 age = 2;
+        string gender = 3;
+        repeated Movie movies = 4;
+        }
+        
+        message Movie {
+        string title = 1;
+        int32 year = 2;
+        repeated string genres = 3;
+        }
+\end{minted}
+\begin{minted}
+        [
+        frame=lines,
+        framesep=2mm,
+        baselinestretch=1.2,
+        bgcolor=white,
+        fontsize=\footnotesize,
+        linenos
+        ]{java}
+        //object building
+        Actor actor = Actor.newBuilder()
+            .setName("Tom Hanks")
+            .setAge(64)
+            .setGender("Male")
+            .addMovies(
+                Movie.newBuilder()
+                    .setTitle("Forrest Gump")
+                    .setYear(1994)
+                    .addGenres("Drama")
+                    .build(),
+                Movie.newBuilder()
+                    .setTitle("Cast Away")
+                    .setYear(2000)
+                    .addGenres("Drama")
+                    .addGenres("Adventure")
+                    .build()
+            )
+        .build();
+\end{minted}
+
+%Remote Procedure call
+\subsection{RPC: Remote Procedure call}
+The Remote Procedure Call paradigm allows clients to call remote procedures as if they were local procedures, without having to manage the details of network communication. 
+
+When a client requests a remote procedure, a local \textit{stub} is created that represents the remote procedure. This stub hides the complexity of network communication and allows the client to call the remote procedure as if it were a local function. Once the stub is called, the remote procedure's parameters are transferred to the server over a network connection. The server processes the parameters and returns the results to the client over the same network connection.
+
+\paragraph{gRPC Framework}
+RPC system developed and widely used by Google. Services defined through Protocol Buffers. 
+
+On the server side, we need to create the interface and set up a gRPC server to handle requests from clients. Meanwhile, on the client side, we only need to use the stub methods provided by the server to make requests.
+
+Server side, for each service defined in the proto file, it is necessary to implement its logic. Client side it is only required to specify the service address and call the stub methods
+
+\paragraph{Multiplexing}
+Communication channel based on HTTP$2$, it leverages multiplexing: different requests and responses can be asynchronously received with a single TCP connection. Mopre advanced than REST that is based on only HTTP verbs
+
+\paragraph{Synchronous vs Asynchronous}
+RPC methods can be used in both synchronous and asynchronous ways. Synchronous calls are blocking, which means the client waits for a response from the server before continuing. Asynchronous calls don't block the thread, allowing the client to continue processing while waiting for a response from the server. gRPC supports both synchronous and asynchronous stubs.
+
+\paragraph{RPC Types}
+\begin{enumerate}
+    \item \textbf{\textit{Unary}}, single request single response
+    \begin{minted}
+    [
+    frame=lines,
+    framesep=2mm,
+    baselinestretch=1.2,
+    bgcolor=white,
+    fontsize=\footnotesize,
+    linenos
+    ]{java}
+    rpc Greeter (HelloRequest) returns (HelloResponse) {}
+    \end{minted}
+    \item \textbf{\textit{Server Streaming}}, single request stream of responses
+    \begin{minted}
+    [
+    frame=lines,
+    framesep=2mm,
+    baselinestretch=1.2,
+    bgcolor=white,
+    fontsize=\footnotesize,
+    linenos
+    ]{java}
+    rpc LotsOfReplies (HelloRequest) returns (stream HelloResponse) {}
+    \end{minted}
+    \item \textbf{\textit{Client Streaming}}, stream of requests single response
+    \begin{minted}
+    [
+    frame=lines,
+    framesep=2mm,
+    baselinestretch=1.2,
+    bgcolor=white,
+    fontsize=\footnotesize,
+    linenos
+    ]{java}
+    rpc LotsOfGreetings (stream HelloRequest) returns (HelloResponse) {}
+    \end{minted}
+    \item \textbf{\textit{Bidirectional streaming}}, streams are independent, client and server can write in any order
+    \begin{minted}
+    [
+    frame=lines,
+    framesep=2mm,
+    baselinestretch=1.2,
+    bgcolor=white,
+    fontsize=\footnotesize,
+    linenos
+    ]{java}
+    rpc BidiHello (stream HelloRequest) returns (stream HelloResponse) {}
+    \end{minted}
+\end{enumerate}
+
+\paragraph{StreamObserver class}
+Is used for asynchronous communication over a stream, to receive asynchronous notifications from a stream of messages. It provides three methods to manage stream communication
+\begin{itemize}
+    \item \texttt{onNext(V value)}, receive a value from the stream
+    \item \texttt{onError(Throwable t)}, receives an exception generated by the stream    
+    \item \texttt{onCompleted()}, receives a notification that the stream communication has ended successfully
+\end{itemize}
+
+
+%REST
+\subsection{REST: Representational State Transfer}
+\uline{Software architectural style that defines a set of rules to follow for creating web services}. These HTTP methods provide a uniform interface that can be used to communicate with web services using different programming languages and systems. REST architecture relies over four HTTP methods, each resource is identified by a \textit{URI}: Uniform Resource Identifier and in each operation the client transmits or receives a representation of a resource
+
+\begin{center}
+    \textbf{CRUD} $\rightarrow$ \textbf{HTTP}\\
+    Create $\rightarrow$ POST\\
+    Read $\rightarrow$ GET\\
+    Update $\rightarrow$ PUT\\
+    Delete $\rightarrow$ DELETE
+\end{center}
+
+Is stateless, each client request is complete and independent and the HTTP header and body contain all the parameters necessary for the server to perform the requested operation. The problem with stateful approach is that the server responds to the client's requests must always be the same because it has to store the client's state. This fact limits the system scalability, load-balancing, and failover.
+
+\paragraph{Jersey}
+Open-source library for web service REST development. Enables to map HTTP requests to Java methods
+
+\begin{minted}
+    [
+    frame=lines,
+    framesep=2mm,
+    baselinestretch=1.2,
+    bgcolor=white,
+    fontsize=\footnotesize,
+    linenos
+    ]{java}
+    @Path("/hello")
+    public class HelloWorld {
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String sayHello() {
+        return "Hello world!";
+    }
+    }
+\end{minted}
+
+Annotations are used to define the interaction between Jersey and our code. Each class manages all actions for a specific level of the URI tree. Each URI consists of two parts
+\begin{itemize}
+    \item \textit{prefix}, defined at the configuration level
+    \item \textit{suffix}, that changes according to the resources on which we want to apply the actions
+\end{itemize}
+
+\paragraph{JAXB}
+Automatic \textit{marshalling} and \textit{unmarshalling} of JavaBeans objects in JSON or XML. \uline{Integrated in Jersey}.
+
+Use of annotations for: define the XML root (\texttt{@XMLRootElement}); Specify variable types if different from those used in Java; The names to be assigned to the elements, if they differ from those specified in the code
+
+\texttt{@Produces} allows specifying the format returned by a method
+
+\texttt{@Consume} allows specifying in which format the data is expected from the client
+
+%MQTT
+\subsection{MQTT: Message Queue Telemetry Transport}
+Machine-to-machine communication protocol, designed for devices with resource constraints (e.g., IoT devices).
+
+\paragraph{Publish-subscribe pattern}
+MQTT is based on the Publish-subscriber pattern. They never contact each other directly, a broker filters all incoming messages from publishers and distributes them to subscribers.
+
+\paragraph{Asynchronicity}
+Processes are not blocked while waiting for a message or publishing a message
+
+\paragraph{MQTT client and broker}
+MQTT client may be any thing connected to the Internet (from microcontrollers to a massive server). Both publisher and subscriber are MQTT clients.
+
+MQTT broker is responsible for managing various aspects such as user authentication, connection handling, session maintenance, and subscriptions. The primary function of the broker is to receive messages from publishers and then transmit them to the subscribers.
+
+\paragraph{MQTT topics}
+MQTT messages are published to \textit{topics}. Topics consist of one or more topic levels, separated by a forward slash
+$$ iot/sensor/temperature $$
+Topics are a great way to organise the data flows through the network. We could use MQTT and use topics to subdivide the data, in this way the clients can subscribe only to the topics they are interested in. Suppose that we are dealing with several sensors deployed accross multiple sites, we could use MQTT and use topics to subdivide the data
+$$site1/position\;;\;site1/temp$$
+$$site2/position\;;\;site2/temp$$
+
+\paragraph{QOS: Quality Of Service}
+It is an agreement between the sender and receiver regarding the guarantee of message delivery. There are three levels of QoS:
+\begin{itemize}
+    \item \uline{QOS $0$: At most once}. It means that the message can be lost or delivered to the recipient only once without any guarantees of further delivery attempts.
+    \item \uline{QOS $1$: At least once}. It means that the message will be delivered to the recipient at least once, but it may be duplicated during delivery in case of missing acknowledgment (PUBACK).
+    \item \uline{QOS $2$: Exactly once}. It means that the message will be delivered to the recipient exactly once, without any duplications or losses.
+\end{itemize}
+
+
+\paragraph{Persistent session}
+If the connection between the client and the broker is interrupted, the topics to which the client subscribed will be lost. To avoid this problem, the client can request a persistent session when connecting to the broker (using the \texttt{cleanSession} flag). Persistent sessions save all relevant information for the client on the broker: subscription topics of the client; all (new) messages in QOS1 or $2$ that the client has not yet confirmed.
+
+\paragraph{Retained message}
+A retained message is a regular MQTT message with the retained flag set to true.
+Each client that subscribes to a topic pattern matching the topic of the retained message receives the retained message immediately after subscribing.
+
+\paragraph{MQTTCallback}
+It enables a MqttClient to work asynchronously. Optional for publishing, mandatory for subscribing
+\begin{itemize}
+    \item \texttt{messageArrived(String topic, MqttMessage message)}
+    \item \texttt{connectionLost(Throwable cause) }
+    \item \texttt{deliveryComplete(IMqttDeliveryToken token)}
+\end{itemize}
+
+\paragraph{Last will and testament}
+If the broker detects an unexpected client disconnection, it sends the Last Will message to all subscribed clients of the corresponding topic

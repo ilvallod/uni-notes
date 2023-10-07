@@ -1,0 +1,52 @@
+\section{Privacy}
+
+%Privacy in mobile apps and services
+\subsection{Privacy in mobile apps and services}
+Linking identity with sensitive data
+
+\paragraph{Location Based Service}
+Re-identification can also be based on frequent patterns of locations. Example: My LBS requests (for car sharing for example) originate from a specialised hospital every Tuesday. 
+
+In a social network context co-location may become private information. Protection of location and absence privacy becomes trickier
+
+%Privacy protection regulation and techniques
+\subsection{Privacy protection regulation and techniques}
+
+\paragraph{GDPR: EU General Data Protection Regulation}
+\begin{itemize}
+    \item \textit{Privacy by default}, default privacy settings should be the most protective
+    \item \textit{Privacy by design}, new processes must be designed with data protection in mind
+    \item \textit{Right to be forgotten}, individuals have the right of correcting or deleting their personal data
+    \item \textit{Pseudonymization}, it separates sensitive data from the data respondents keeping the mapping between them accessible only to selected authorised entities 
+    \item \textit{Data minimization}, acquire personal data only at the precision strictly necessary for the service
+\end{itemize}
+
+\paragraph{Security principles}
+\begin{itemize}
+    \item \textit{Confidentiality}, only authorized parties can access data
+    \item \textit{Integrity}, data should not be altered without authorization
+    \item \textit{Availability}
+    \item \textit{Transparency}
+    \item \textit{Unlinkability}, privacy-relevant data cannot be linked across domains. K-anonymity
+    \item \textit{Intervenability}, data rectification or access
+\end{itemize}
+
+\paragraph{k-anonymity}
+Each released record cannot be associated to less than $k$ possible respondents
+
+\paragraph{Location k-anonymity}
+The principle of k-anonymity requires that the individual must be indistinguishable from $k - 1$ other potential issuers of the LBS request. 
+
+\paragraph{Fake location}
+Simultaneous requests from $n+1$ locations (one of them being
+the real one) and discard $n$ results
+
+\paragraph{Spatial cloaking}
+Spatial cloaking is an anonymization technique used in the context of k-anonymity. It involves enlarging the location of the requesting user to include other users' positions
+
+The geographic position of the user needs to be enlarged to a cloaking region that includes $k-1$ other users before sending the request to the LBS. This region can be computed by a trusted anonymization service that knows many user positions, such as a mobile operator. Therefore, even in the worst-case scenario where an untrusted LBS provider can identify all $k$ users in the reported area, they can only determine that one of them searched for something, and there is only a chance of $\frac{1}{k}$ that this user was $x$.
+
+\paragraph{Differential privacy}
+A technique for data privacy protection used to safeguard the privacy of individuals participating in a data collection or analysis process. It involves adding statistical noise to the original data in order to mask personal information
+
+\newpage

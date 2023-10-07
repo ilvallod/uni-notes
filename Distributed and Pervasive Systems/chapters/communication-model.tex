@@ -1,0 +1,82 @@
+\section{Communication model}
+Communication is the core of distributed system because we have heterogenous nodes/machines.
+The only way to they can work together it’s to communicate with each other
+
+\paragraph{Middleware protocols}
+All the protocols are always above the transport layer
+
+%Persistency communication
+\subsection{Persistency communication}
+System that guarantees the delivery of a message to the destination in case the receiver cannot receive it. You have persistence communication when there is some infrastructure that take care of the messages even the recipient is not ready to handle that
+
+\begin{itemize}
+    \item \textit{Persistent asynchronous}, doesn’t wait for any answer by the server. Put only a notification and then continue to work. In case B is not running, the message will be saved in the intermediate storage system between the server and the client
+    \item \textit{Persistent synchronous}, message is stored for later delivery. Must be a system that accept the request. Example: one tick on Whatsapp
+\end{itemize}
+
+\paragraph{Queuing system}
+Persistent asynchronous example: message on the phone
+\begin{itemize}
+    \item \textit{Put}, append a message to a specified queue
+    \item \textit{Get}, until the specified queue is non-empty, remove the first message
+    \item \textit{Poll}, check a specified queue
+    \item \textit{Notify}, when a message is put into the specified queue
+\end{itemize}
+
+\paragraph{Message broker}
+Helps nodes in a distributed system communicate by converting messages between different formats or protocols, translate the messages so that they can be understood by all nodes. Ensure also access transparency
+
+\paragraph{Protocols} \textit{XMPP}, \textit{MQTT: Message Queue Telemetry Transport}, \textit{AMQP}
+
+%Transienty communications
+\subsection{Transienty communications}
+Dual of persistency is the transienty, if the server is down it is not possible to carry out the communication
+
+\begin{itemize}
+    \item \textit{Transient asynchronous}, sends message and continues. Message can be send only if $B$ is running
+    \item \textit{Receipt-based synchronous}, ack of received
+    \item \textit{Delivery-based synchronous},  wait until start elaboration
+    \item \textit{Response-based synchronous}, wait until he received result of his request
+\end{itemize}
+
+\paragraph{Berkley Sockets}
+When you connect two processes with socket you need both processes to be active that’s why it’s transient. Socket is the end of a communication channel between nodes
+
+\paragraph{Primitives}
+\begin{itemize}
+    \item \textit{Socket}, initializes a new communication point. What the socket does is tell to the operating system to prepare some structure for this process to handle this logical connection
+    \item \textit{Bind}, give a port on the machine that unique identify this socket so the people outside can connect and send message
+    \item \textit{Listen}, prepare a memory area to queue messages and connection requests
+    \item \textit{Accept}, blocks code execution until a connection request arrives in the listen queue
+    \item \textit{Connect}, with IP and PORT
+    \item \textit{Send}, send messages from one machine to another
+    \item \textit{Receive}, receives messages from the other machine 
+    \item \textit{Close}, closes the connection between two endpoints
+\end{itemize}
+
+%Remote Procedure Call
+\subsection{Remote Procedure Call}
+Abstract layer for communication between nodes. It’s a method of introducing transparency of access to message communication. We want to make sure that in our software we normally call, locally, a procedure that will run remotely on another machine. The main difficulty of the RPC is the passing of the parameters that include data structures, which are usually passed as references to memory areas where the data is stored. This works well on the same machine, but in remote communication the memory is not shared.
+
+\paragraph{Stub}
+Allows us to make this abstraction. It take care of marshalling and unmarshalling operations
+
+\paragraph{Serialization}
+Adjust parameters before passing them over the network
+
+\paragraph{Marshalling}
+Format RPC parameters in a message
+
+\paragraph{Unmarshalling}
+Inverse procedure
+
+\paragraph{Binding a client to a server}
+\begin{itemize}
+    \item \textit{Register endpoint}
+    \item \textit{Register service}, directory server in which was written that there’s this service
+    \item \textit{Look up server}, searching a specific service
+    \item \textit{Daemon will answer to the client}, daemon can give the client the port
+    \item \textit{Do RPC}
+\end{itemize}
+
+\newpage

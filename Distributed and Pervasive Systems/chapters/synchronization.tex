@@ -1,0 +1,68 @@
+\section{Synchronization}
+Nodes must synchronize, agree on tasks to achieve common goals
+
+%Physical clock
+\subsection{Physical clock}
+Physical clocks are based on an oscillation of a quartz crystal properly put into tension, for this we need the battery. Associated to the crystal there are two registers, one is called \textit{counter} and one \textit{holding register} and at each reel the counter is decremented until it reaches $0$ and generates an interrupt, then it is initialized to the value of the holding register and start again
+
+\paragraph{Atomic clock}
+Transaction of an atom of \textit{Cesio133}. The average solar day corresponds to about $9/10$ billion oscillations.
+
+\paragraph{TAI}
+International Atomic Time, an average of the atomic clocks on Earth. If computers use a number to adjust to our time then where does this time come from? It does not come from the computer clearly or otherwise not directly. What time is used as a reference in Computer Science? UTC that is TAI plus leap seconds. Leap seconds are introduced (once in a while) to keep our time in phase with the sun
+
+\paragraph{Using GNSS}
+\textit{GPS} is the most used Global Navigation Satellite Systems. There is a server on Earth connected with an atomic clock. GNSS have one or more atomic clocks onboard
+
+GNSS receivers listen to multiple satellites and use \textit{trilateration} to determine their own position and UTC time deviation. The satellite sends a message that is received by the GPS receiver, calculating the time spent between sending and receiving, obtaining the distance, now it knows at what distance it is from the satellite which has a known position.
+
+\paragraph{The Berkeley algorithm: internal synchronization}
+Do not need to synchronize to an external time (UTC), only the nodes of the system are synchronized between them.
+\begin{enumerate}
+    \item \textit{Time daemon asks all the other their clock values}, sends a message containing the time
+    \item \textit{The machine answers}, saying the difference between the time of the message and their time
+    \item \textit{Time daemon tells everyone how to adjust their clock}, daemon calculates an average of these times, it uses the average to try to minimize the movements of the clocks, and communicates how much the various clocks must move
+\end{enumerate}
+This algorithm allows us to go back, so in case of negative delta does not bring
+back but the clock is slowed down until it synchronizes with others
+
+%Logical clock
+\subsection{Logical clock}
+It may be sufficient to share the knowledge of a partial order of events on the distributed system
+
+\paragraph{Temporal precedence}
+Each node must be aware that a certain event occurred before another 
+
+\paragraph{The idea}
+An integer is used at each node as a logical clock. It’s incremented every time an interesting event occurs
+
+\paragraph{Happened before relationship}
+If \textit{a,b} are events, the expression $a \rightarrow b$ denotes the relation \textit{a happen before b}. It is a transitive relation
+
+\paragraph{Lamport’s algorithm}
+Lamport’s algorithm allow us to have a partial order on events occuring
+
+$C(a)$ is the logical clock value assigned by the process when \textit{a} occurs. The value of a logical clock can only increase. Goal: if $a \rightarrow b$, then $C(a) < C(b)$
+
+\begin{enumerate}
+    \item Before executing an event $P_i$ executes $C_i \leftarrow C_i + 1$
+    \item When process $P_i$ sends a message \textit{m} to $P_j$, set \textit{ts(m)} equal to $C_i$ 
+    \item When $P_j$ receives message \textit{m} at $C_j$, adjusts its own counter as $$C_i \leftarrow max(C_j, ts(m)) + 1$$
+\end{enumerate}
+
+\paragraph{Enforcing total order}
+Add \textit{process number} to the timestamp of an event. It can be represented as C(a).i, where \textit{i} is the unique identifier of each process.
+
+We can now define a \textit{label} as clock.identifier. Modify Lamport with total order could be very useful because it can happen that two clocks are equal. To implement the multicast with total order there is a need to assume that there are no lost messages, and that messages from the same sender are received in the order in which they were sent
+\begin{enumerate}
+    \item The process $P_i$ sends the $m_i$ message with timestamp (label) to all other processes. The message is placed in a local queue $i$.
+    \item Any incoming message from $P_j$ is queued in its $j$ queue according to the timestamp, and an ACK (the real key of this solution) is sent for delivery to all other processes.
+    \item $P_j$ passes the message mi to the above application if:
+    \begin{itemize}
+        \item $m_i$ is at the head of the queue $j$.
+        \item $m_i$ was received and ACKed by all other processes.
+    \end{itemize}
+    \item All processes will have the same copy of the local queue, so all messages are passed to the application in the same order in all nodes.
+\end{enumerate}
+
+\newpage

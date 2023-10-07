@@ -1,0 +1,71 @@
+\section{Introduction}
+What is a distributed system?
+\paragraph{Tanenmbaum's definition}
+\textit{Is a collection of indipendent computers that appears to its user as a single
+coherent system}
+
+This definition has two important aspects. Firstly, it comprises autonomous independent components, often computers. Secondly, the user perceives the distributed system as a unified entity. This means that the autonomous components needs to collaborate
+
+\paragraph{Middleware layer}
+Distributed system is organized as a middleware
+that it’s logically placed between applications/users and the operating system. This layer spans multiple machines and provides a uniform interface to applications, hiding any hardware/OS differences
+
+\paragraph{Lamport's definition}
+\textit{A distributed system is one in which the failure of a computer you didn’t ever
+know existed can render your own computer unusable}
+
+This definition put the finger on an important issue of the distributed system: dealing with the failure.
+
+\paragraph{Goal of distributed system}
+\begin{itemize}
+    \item \textit{Making resource accessible}, make easy for the user and application to access remote resources, and to share them. There are many reason to want to share resources, one obvious is that economic. It’s cheaper have a resource shared by several users than having to buy and maintain a separate resource for each user.
+    \item \textit{Distribution transparency}, the complexities should be hidden from the user who uses the distributed system
+    \begin{enumerate}
+        \item \textit{Location}, access objects without knowledge of their location
+        \item \textit{Access}, objects are accessed with the same operations regardless of whether they are local or remote
+        \item \textit{Migration}, hide that a resource might move to another location
+        \item \textit{Relocation}, it's similar to migration but while in use
+        \item \textit{Replication}, a resource is replicated without any effect
+        \item \textit{Concurrency}, consistency of shared resources is mantained despite being accessed and updated by multiple processes
+        \item \textit{Failure}, hide failure and recovery 
+    \end{enumerate}
+    \item \textit{Opennes}, should offer: interoperability; portability; extensibility
+    \item \textit{Scalability}, can be measured along three dimensions: size; geographical; administrative
+\end{itemize}
+
+%Types of distributed systems
+\subsection{Types of distributed systems}
+
+\paragraph{Clusters}
+ A collection of similar workstations/servers closely connected by high-speed Local-Area Network and usually running the same operating system. The goal is high performance computing tasks or high availability
+
+ \begin{itemize}
+     \item \textit{Asymmetric approach}, there’s a node that organized the work for other nodes. Examples: Google Borg, Kubernetes
+     \item \textit{Symmetric approach}, there is no master node. Example: Mosix
+ \end{itemize}
+
+ 
+\paragraph{Cloud: service models}
+\textit{IAAS}(hardware), CPU memory and datacenters; \textit{PAAS} (Databricks); \textit{SAAS}, application that run on the cloud (Google Docs, Office 365, Gmail). Can be deployed in different ways: private, community, public, hybrid
+
+\paragraph{Edge computing}
+Focuses on processing data within IoT devices themselves. In practice, the idea is to move data processing from the cloud to the IoT device to reduce latency and increase data processing speed. This way, data is processed locally, and only relevant data is transmitted to the cloud for further analysis.
+
+\paragraph{Fog computing}
+Focuses on distributing data processing across multiple nodes within the IoT network. Instead of processing data only on IoT devices, Fog computing uses a set of distributed nodes within the network. This way, data can be processed more efficiently and latency can be reduced without necessarily transferring all data to the cloud.
+
+
+%Pervasive computing
+\subsection{Pervasive computing}
+
+\paragraph{Weiser's definition}
+\textit{The most profound technologies are those that disappear they weave themselves
+into the fabric of everyday life until they are indistinguishable from it}
+
+\paragraph{Adaptivity}
+Depending on context the system is capable to understand and change their behavior for optimize the system goal
+
+\paragraph{Unconventional nodes}
+Not designed for computing but with computing and communication capabilities. Introduces challenges such as limited resources, variability in connectivity, and variable positions. There is also high volatility due to device and communication system failures, changes in communication characteristics, and the dynamic nature of the system with a high number of nodes that may associate or dissociate.
+
+\newpage

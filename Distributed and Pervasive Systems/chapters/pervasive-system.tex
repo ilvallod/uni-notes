@@ -1,0 +1,69 @@
+\section{Pervasive system}
+The concept of transparency of distributed systems here is extreme, even the element that makes calculation and communication, the node, in fact disappears.
+
+Switch from mobile nodes to \textit{sensors} that have computational capabilities and are connected to Internet
+
+\paragraph{Distributed pervasive systems}
+An extension of distributed systems with the following characteristics
+\begin{itemize}
+    \item \textit{Unconventional nodes}, nodes that are not explicitly designed for computing but are equipped to perform computing and communication functions
+    \item \textit{Adaptivity}, considers the current context
+\end{itemize}
+Mobile computing introduces new problems: limited resources; variance in connectivity; variable position; different types of interfaces
+
+\paragraph{Smart device}
+A device to be defined as smart must have the following characteristics: connected to Internet; run algorithms, locally or remotely, to interpret data and understand context; offer personalized services based on context
+
+%Data acquisition
+\subsection{Data acquisition}
+\paragraph{Transducers}
+Devices that transform one form of energy into another. Sensor captures a physical phenomenon and translates it into electricity, the actuators the opposite
+
+\paragraph{Sensors - Input transducers}
+Acquire measurements from the physical world
+\begin{itemize}
+    \item \textit{Physicists}, motion that measure acceleration and rotation along three axes; environmental; position sensors
+    \item \textit{Virtual}, services that provide context data to remote clients
+\end{itemize}
+
+\paragraph{Actuators - Output transducers}
+Make actions that affect the physical world. They are usually powered
+
+\paragraph{Base stations}
+Collect data from distributed sensing and actuating devices, may act as a gateway between networks
+
+\paragraph{Data management}
+Saving battery is the biggest problem in this context, I may need to make \textit{continuous queries}, that is, queries that continue over time to retrieve information
+
+%Basic methods
+\subsubsection{Basic methods}
+\paragraph{Batch processing}
+Buffering the data acquired by the sensor on the device and then sending it to the base station or remote server. No sensor-side computation but high communication costs
+
+\paragraph{Sampling}
+Do not use all sensor data
+
+\paragraph{Overlapping sliding windows}
+\textit{Time windows} are defined and real-time computation sensor side is made on these. The \textit{overlap} has the task of capturing the phenomena that occur at the edge of the time windows
+
+%Advanced methods
+\subsubsection{Advanced methods}
+Improve data quality and save energy
+
+\paragraph{In-network query processing}
+Build an overlay network in the form of a reverse tree, by aggregating the data into intermediate nodes of the tree. In this way I reduce the amount of data transmitted to the base station
+
+\paragraph{Duty-cycling}
+The radio that transmits the data remains in \textit{sleep mode} for most of the time, if you have a given "abnormal" the radio \textit{wake up} and sends the data. Coordinated sleep/wakeup scheduling algorithm
+
+\paragraph{Model-based/data-driven approaches}
+The data present a strong spatio-temporal correlation. The goal is to reduce the number of samples, read or sent, while maintaining good data quality
+\begin{enumerate}
+    \item \textit{Data cleaning}, eliminate outliers from the data. This step is done by the base station and not by the sensor. If a data doesn’t follow this function, it’s an outlier, I don’t send it. The most likely sensor readings are compared with a statistical model, and anomalies are detected by comparing the raw sensor data with the model values.
+    \item \textit{Data acquisition}, only send data that doesn’t follow that pattern, that is, that surpasses a certain $\delta$. Example: temperature
+    \item \textit{Query processing}, processing queries by accessing or generating minimal amount of data
+    \item \textit{Data compression}, eliminate redundancy memorizing the extremes of a range of value. Example: Poor man’s compression-MidRange, used to reduce the amount of data I have to send
+    
+\end{enumerate}
+
+\newpage

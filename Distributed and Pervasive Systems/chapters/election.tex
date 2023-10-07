@@ -1,0 +1,50 @@
+\section{Election}
+In the event of a crash, the coordinator may fail, so it takes an automatic system to elect a new coordinator in order to ensure transparency. Election of the \textit{active} process with the highest identifier
+
+%Bully
+\subsection{Bully}
+\paragraph{Assumptions}
+\begin{itemize}
+    \item The system is synchronous
+    \item Each process is aware of its own ID and network address, and that of every other process
+\end{itemize}
+
+\paragraph{Steps}
+\begin{enumerate}
+    \item If a process \textit{P} has the highest process ID it sends a \textit{victory message} to all other processes. However it broadcasts an \textit{election message} to processes that have higher process IDs than itself
+    \item If \textit{P} receives no answer becomes the coordinator
+    \item If \textit{P} receives an \textit{answer message} from a process with a higher process ID, it does not send any further messages and waits for a victory message. If it does not receive such a message within a certain period of time, it will restart the election process from the beginning
+    \item If \textit{P} receives an \textit{election message} from another process with a lower ID it sends an answer message back and if it has not already started an election, it starts the election process at the beginning
+\end{enumerate}
+
+\paragraph{Worst case}
+When the process with the lowest ID initiates an election. This process sends $n-1$ election messages, the next higher ID sends $n-2$ messages, and so on, resulting in $\Theta(n^2)$ messages
+
+%Chang and Roberts
+\subsection{Chang and Roberts}
+\paragraph{Assumptions}
+\begin{itemize}
+    \item \textit{n} processes are logically ordered in a ring. $P_i$ process has a communication channel with $P(i+1)mod_n$
+    \item Messages circulate clockwise without failure
+    \item Processes have unique IDs
+\end{itemize}
+
+\paragraph{Steps}
+\begin{enumerate}
+    \item All processes are marked as \textit{non-participant}
+    \item When a process $P_k$ understands that the coordinator is not answering, it starts an election by marking itself as participant and sending to the next node in the ring a message $<Election, ID(P_k)>$
+    \item When a process $P_m$ receives the election message
+    \begin{itemize}
+        \item If $ID(P_k) > ID(P_m)$ forwards the message in the ring and marks itself as participant
+        \item If $ID(P_k) < ID(P_m)$ if $P_m$ is non-participant it changes to participant and forwards \textit{<Election, ID(Pm)>}, otherwise it does not forward the message
+        \item If $k=m$ then it is the coordinator. It marks itself as non participant and sends \textit{<Elected, ID(Pm)>}
+        \item When a process $P_k$ receives the elected message it marks itself as non-participant, stores the id of the coordinator, and unless $k=m$ it forwards the message to the next process
+    \end{itemize}
+\end{enumerate}
+
+\paragraph{Drawbacks}
+If each node only knows the next address of the ring, in case of a node crash the ring is broken. In practice each node also knows the addresses of \textit{k} successors, in order to avoid the problem of crashes
+
+\paragraph{Worst case} $3N-1$
+
+\newpage

@@ -1,0 +1,106 @@
+\section{Fault tolerance}
+
+\paragraph{Dependability}
+Being fault tolerant is strongly related to what are called \textit{dependable systems}, it implies
+\begin{itemize}
+    \item \textit{Availability}, run correctly at any given moment
+    \item \textit{Reliability}, run correctly for a long interval of time
+    \item \textit{Safety}, failures must be handled
+    \item \textit{Maintainability}
+\end{itemize}
+
+\paragraph{Failure type}
+\begin{itemize}
+    \item \textit{Crash failure}, the processes fails by stopping but execute honestly. The most benign type of failure
+    \item \textit{Omission failure}, a server fails to respond to incoming request
+    \item \textit{Timing failure}, server answer to request too late and triggers timeout
+    \item \textit{Response failure}, response is incorrect
+    \item \textit{Byzantine failure}, arbitrary responses at arbitrary times. Normally caused by intrusion of malicious nodes in the system
+\end{itemize}
+
+\paragraph{State machine replication}
+To move around the problem of failure we replicate the data having multiple copies of it. You have a server/machine, and the state reflect a sequence of operations, the log. The state machine is the component that we want to make fault-tolerant. The problem can be filter down to a problem of managing a replicated log. It will appear to clients that they are interacting with a single, reliable state machine
+
+\paragraph{Information redundancy} 
+Extra bits used to recover transmitted message when noise is present
+
+\paragraph{Time redundancy}
+A transaction is repeated if aborted because failure of one of its actions
+
+\paragraph{Physical redundancy}
+Extra hardware or software/process
+
+\paragraph{Process resilience}
+\textit{Voters} look at the outputs of the various redundant processes and
+determine by majority which is the correct output that will then be forwarded to the other processes. Majority is essential in nowadays algorithm for consensus
+
+\paragraph{How much redundancy}
+Where \textit{k} it’s the number of processes that fail
+\begin{itemize}
+    \item In crash failure, where the node do not produce any value, $k+1$
+    \item With bad value you need at least $2k+1$ processes
+    \item In consensus problems without malicious nodes $3k+1$
+\end{itemize}
+
+\paragraph{Consensus}
+Each process proposes a single value and all non-faulty processes should all agree on the same value. Achieving consensus among geographically dispersed processes is a fundamental challenge in distributed computing. One well-known instance of this challenge is the \textit{transaction commit problem}.
+
+\paragraph{Byzantine problem}
+One \textit{commander} process proposes a value \textit{v}, all non-faulty processes must agree on a value. The problem exists if the commander is not faulty
+
+\paragraph{FLP Theorem}
+Theoretical impossibility, if I am in an asynchronous system consensus is impossible. When delays in the response of messages are arbitrary there is no possible
+solution for the Byzantine agreement, the only solution is the assumption of partially synchronized systems
+
+\paragraph{CAP Theorem}
+No distributed system is immune to network failures, so network partitioning generally needs to be tolerated. In the presence of a partition, there are two options: \textit{consistency} or \textit{availability}. Choosing consistency means the system will return an error or timeout if certain information cannot be guaranteed to be up-to-date. Choosing availability means the system will always process the query and try to return the most recent available version of the information, even if it cannot guarantee it is up-to-date. In asynchronous systems only two of these are achievable
+
+\begin{itemize}
+    \item \textit{Consistency}, every read receives the most recent write. Note that consistency as defined in the CAP theorem is quite different from the consistency guaranteed in ACID properties
+    \item \textit{Availability}, system operating $100\%$ of the time
+    \item \textit{Partition tolerance}, system tolerates an arbitrary number of lost messages
+\end{itemize}
+
+\paragraph{Google Spanner}
+Infrastructure for managing replication. It requires replication at geographical scale, they need Paxos algorithm to maintain different replicas. First time where Paxos was used in large scale distribution.
+
+\paragraph{Different dimensions for each protocol}
+\begin{enumerate}
+    \item \textit{Synchrony}, async is more realistic. I don't know how much time my message spend to go to you, the clocks of different processes are not synchronized
+    \item \textit{Failure model}, crash or byzantine  
+    \item \textit{Processing strategy}, pessimistic or optimistic. Two different approaches to ensure data consistency. The pessimistic approach, also known as the locking-based approach, is based on the idea of preventing conflicts between concurrent operations by using exclusive locks. In the optimistic approach, operations are executed without requesting preemptive locks. During the commit phase, conflicts between concurrent operations are checked, and if necessary, conflict resolution policies are applied.
+    \item \textit{Participant awareness}, known or unknown 
+    \item \textit{Complexity metrics} 
+\end{enumerate}
+
+\paragraph{Paxos protocol}
+Asynchronous leader-based protocools. Is a family of protocols for solving consensus in a network of unreliable or fallible processors ensuring consistency. Paxos works in three phases
+\begin{enumerate}
+    \item \textit{Prepare}, to get yourself elected as a leader. Proposer, who want to be the leader, contacts sending message to all the acceptors and asks them if they will consider its value/ballot number. Once a quorum, moves onto the second phase
+    \item \textit{Accept}, if a quorum of nodes accepts this value then the value is chosen
+    \item \textit{Commit}, commit the chosen value to all nodes in the cluster. Learners announce the outcome
+\end{enumerate}
+
+The basic version does not cover Byzantine failure, but there’s Byzantine Paxos,  and tolerates the failure of \textit{k} nodes with $n=2k+1$
+
+\paragraph{Fast paxos}
+Reduce one phase of communication assuming that the leader is elected
+
+\paragraph{Raft protocol}
+Simpler and more understandable implementation of Paxos. Equivalent to Paxos in term of fault-tolerance and performance but integrates the consensus part with the management of the log\footnote{\url{http://thesecretlivesofdata.com/raft/}}. Unlike Byzantine fault-tolerant algorithms, Raft operates under the assumption that nodes trust the elected leader
+
+A node can be in $1$ of $3$ states: \textit{Follower}; \textit{Candidate}; \textit{Leader}. Consensus is achieved through the election of a leader. The leader is responsible for replicating the log to the followers and regularly sending heartbeat messages to maintain its leadership. If a follower doesn't receive a heartbeat within a timeout period, it transitions to a candidate state and initiates a leader election.
+
+\begin{itemize}
+    \item \textit{Leader election}, all nodes initially start in the follower state. If a follower doesn't receive any communication from a leader, it transitions to the candidate state. As a candidate, it requests votes from other nodes. Each node responds with its vote. If the candidate receives votes from a majority of nodes, it becomes the leader.
+
+    Raft uses a randomized \textit{election timeout} (typically between $150$ms and $300$ms) to minimize the chance of split votes and ensure a timely resolution. This approach helps prevent multiple servers from becoming candidates simultaneously, allowing a single server to become the leader, send heartbeats, and establish its leadership before other followers can become candidates.
+
+    \item \textit{Log Replication}, every change made by a client is recorded as an entry in the leader's log. The leader replicates it to the follower nodes. Once the leader receives confirmation from a majority of followers, the entry is considered committed. Once committed on the leader node, the leader informs the followers that the entry is committed using the AppendEntries message, which is also used for heartbeats.
+
+    If the leader crashes, the logs can become inconsistent. The new leader resolves this by comparing its log with each follower's log, finding the last matching entry, and replacing the follower's log with its own entries from that point onward.
+\end{itemize}
+
+In Raft, the \textit{State Machine Safety rule} is maintained by ensuring that a candidate can only win an election if its log contains all the committed entries. When a candidate requests a vote from a voter, it includes information about its own log. If the voter's log is more up-to-date than the candidate's log, the voter will not grant its vote to the candidate. This mechanism guarantees the safety of the state machine by ensuring that only candidates with the most up-to-date log can become leaders.
+
+\newpage

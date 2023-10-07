@@ -1,0 +1,52 @@
+\section{Distributed Ledger Technology and blockchain}
+It’s a distributed log. An example of DLT is Blockchain, it was born in $2008$ with the paper \textit{Bitcoin: a peer to peer electronic cash system}, Satoshi Nakamoto.
+
+The most important feature of this technology is the introduction of a historical distributed, immutable/append-only, fault-tolerant and Byzantine fault-tolerant register
+
+\paragraph{DLT}
+All the previous system basing on assumption that processes would fail by crashing. In the Blockchain world we're interested in malicious failures because you are storing data on untrusted components. Each node also contains the same copy of data, which must therefore be synchronized.
+
+\begin{itemize}
+    \item \textit{Permissionless/public DL}, any node in the network can participate in validating transactions and creating new blocks, without needing specific authorization or permissions. There is no central authority
+    \item \textit{Permissioned/private DL}, only a restricted group of authorized nodes have permission to validate transactions and create new blocks. Is controlled and managed by a central authority
+\end{itemize}
+
+\paragraph{Problem of consensus}
+Nodes must find a consensus on the history of data in the blockchain. This consensus is given by the blocks and their order
+
+\paragraph{Blockchain}
+Blockchain is a permissionless ledger of transactions. To maintain quality and decentralization without using a coordinator, a system of digital signatures is employed. Transactions are digitally signed with the sender's private key and broadcasted to all nodes in the blockchain. When a node receives a transaction, it is considered valid. Validated transactions, however, are still regarded as pending as they are not yet part of the chain.
+
+\paragraph{Structure of the blockchain}
+Transactions in blockchains are grouped into blocks with a timestamp and the entire data history stored in each block through a \textit{Merkel tree}. Inside each block there is also a \textit{nonce} and a \textit{prevhash}, reference to its predecessor
+
+\paragraph{Double spending}
+Some transactions may be contradicting each other, in this case consensus is required
+
+\paragraph{Consensus}
+The challenge is therefore to have for the nodes a consensus on the blocks and their sequence, each node must have the same copy of the chain
+\begin{itemize}
+    \item Calculate the hash of each transaction and a block
+    \item Compute the hash of a block including the hash of the prevhash in the chain
+    \item Include a trick to make the computation of the block hash expensive but very easy to verify
+    \item The difficulty of the problem is increased 
+\end{itemize}
+
+\paragraph{Miner's problem}
+Find a number to be assigned to the field as well as the total block so that the hash of the entire block is smaller than a certain number or has a particularly property
+
+\paragraph{Proof Of Work}
+The algorithm used for consensus. 
+
+Within the same blockchain there could be several different chains between peers: to solve it, a majority vote is made, choosing the chain shared by multiple peers. It’s the heart of the blockchain, if there wasn’t a consensus, everyone would have a different idea of the transactions. Branches that are not part of the prevailing chain are no longer developed
+
+\begin{itemize}
+    \item The fastest growing chain becomes the longest and most reliable
+    \item If a malicious node wants to change a transaction of an intermediate block in the chain, it must recalculate the hash of the block itself and all its successors and prevail over the rest of the nodes in the network
+    \item The blockchain is considered safe until at least $50\%$ of the nodes are not malicious
+\end{itemize}
+
+\paragraph{Smart contract}
+Generalization of the use of blockchain. Pieces of software that define a contract that works independently that is stored within the blockchain becoming immutable
+
+\newpage

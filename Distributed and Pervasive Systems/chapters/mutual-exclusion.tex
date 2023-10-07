@@ -1,0 +1,56 @@
+\section{Mutual exclusion}
+A set of a process needs to concurrently access a shared resource, the only way in a distributed system to agree is to send messages
+
+%Centralized
+\subsection{Centralized}
+\begin{enumerate}
+    \item Process $1$ asks the coordinator to access the resource. Access is granted. In the request written the id of the process and the name of resource
+    \item Then, process $2$ asks for access. The coordinator does not answer, but adds the request to the queue in FIFO order
+    \item When process $1$ is done it notifies the coordinator that grants access to the first process in the queue
+\end{enumerate}
+
+\paragraph{Drawbacks}
+\begin{itemize}
+    \item Single point of failure
+    \item It’s difficult to distinguish a problem of the coordinator process from the unavailability of the resource
+    \item Starvation
+\end{itemize}
+
+%Ricart and Agrawala
+\subsection{Ricart and Agrawala}
+All the nodes of the system participate in the coordination
+
+\paragraph{Assumption} 
+Total order of events and ACK system
+
+\begin{enumerate}
+    \item If \textit{P} wants to use a resource \textit{R} it builds a message \textit{<R, id(P), timestamp>} and sends the message to all the processes including itself
+    \item When a process \textit{Q} receives a message we have 3 cases
+    \begin{itemize}
+        \item If \textit{Q} neither uses nor requires \textit{R} it answer OK to \textit{P}
+        \item If \textit{Q} is using \textit{R} it does not answer and it queues the request
+        \item If \textit{Q} wants to use \textit{R} but it did not yet, it compares the message timestamp with the one in the message, the earliest wins.
+    \end{itemize}
+    \item After sending out its message process \textit{P} waits for OK from all processes before accessing \textit{R}
+    \item When \textit{P} is done with \textit{R} it sends OK to all processes in its queue and empties the queue
+\end{enumerate}
+
+\paragraph{Drawbacks}
+\begin{itemize}
+    \item Involving all processes may be a waste of resources
+    \item We have a problem if there’s a crash and no answer
+\end{itemize}
+
+%Token-ring algorithm
+\subsection{Token-ring algorithm}
+Unordered group of processes, a software defined logic ring
+\begin{enumerate}
+    \item The token is given to process $0$
+    \item The token is sent with a message from process \textit{i} to process $(i+1)mod_n$
+    \item A process can access the resource when it receives the token
+\end{enumerate}
+
+\paragraph{Drawbacks}
+If no node needs the resource, the token go ahead
+
+\newpage

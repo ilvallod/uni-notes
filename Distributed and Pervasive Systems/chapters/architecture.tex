@@ -1,0 +1,109 @@
+\section{Distributed system architecture}
+
+%Centralized architectures
+\subsection{Centralized architectures}
+\paragraph{Client-server}
+A client-server architecture is a model for organizing computing tasks where clients request and receive services from servers. The specific allocation of tasks between clients and servers can vary, such as having applications and databases hosted on the server or only having the database on the server while the application runs on the client.
+
+\paragraph{Multi-tier client-server}
+The server part is decomposed. Data manager
+separated from application logic. Application can change but data still stable. Microservices are an evolution of this architecture
+
+\paragraph{Vertical distribution}
+Different node for each functionality, different process in different machine. This
+is the main goal for microservices
+
+\paragraph{Horizontal distribution}
+Same functionality distributed on multiple nodes with
+load balancing
+
+\paragraph{Event bus} 
+Publish-subscribe communication pattern. Is a request of interest
+
+
+%Decentralized architectures
+\subsection{Decentralized architectures}
+
+\paragraph{Peer-to-peer} All the nodes have the same functional capabilities.
+
+Three generation of P2P systems, more conceptual than cronological
+
+\begin{enumerate}
+    \item \textit{First file sharing}, Napster
+    \item \textit{Improved scalability, fault tolerance, anonimity}, Gnutella, BiTorrent
+    \item \textit{P2P middleware}, Chord, Can 
+\end{enumerate}
+
+\paragraph{Goal of P2P middleware}
+\begin{itemize}
+    \item \textit{Lookup function}, locate and communicate with any resource
+    \item \textit{Add and remove resources}
+    \item \textit{Add and remove peers}
+\end{itemize}
+
+\paragraph{Overlay network}
+Logical network, over an existing lower level
+network, in which nodes are formed by processes and the links represents possible communication channels
+
+\paragraph{Structured overlays}
+Built with deterministic algorithm, hash table 
+
+%Napster
+\subsubsection{Napster}
+It’s not a pure system, there is an index server where you can
+find the list that actually might have the file but there’s no a broker, operation does not depend on any centrally administrated system
+\begin{enumerate}
+        \item File location requests
+        \item Lists of peers offering the file with an address  IP and PORT
+        \item IP allow me to goes here and the PORT tell me where the Napster process
+        \item File delivered
+        \item Index update
+    \end{enumerate}
+
+%Chord
+\subsubsection{Chord}
+Is a distributed protocol to locate nodes and objects, useful for optimize search resources in a system
+
+\paragraph{Main goal}
+Quickly mapping a resource to a node
+
+\paragraph{Main idea}
+DHT: Distributed Hash Table. DHT is the general mechanism to enabling $O(\log N)$ research
+
+\paragraph{The lowest among the greater}
+An addressing space for $1$ to \textit{n} bit (up to $160$ bits) is fixed and each nodes is assigned one of the addresses in this space. Each resource is assigned an address taken from the same address space used for nodes and is managed (stored) by the node that have the smallest id greater than the resource.
+
+\paragraph{Address of peer}
+One way to provide a unique identifier for a peer is to combine its IP with port number. By applying a hash function to this combination, we can obtain an address within the address space of the distributed hash table. Nodes are more more less than resources
+
+\paragraph{Finger Table} 
+Is a specific implementation of a DHT. Contains a list of other nodes in the system, and the distances between them in the hash space. Specifically, the ith entry in a node's finger table contains the node that is responsible for the next $2^i$ hash values after the current node's identifier
+
+Each node gets as \textit{id} an address in the space by hashing its IP and port. Each data item gets a key (address) in the same space, a file gets a key by hashing its file name. A data item with key \textit{k} is managed by the first node with $id >= k$, called \textit{succ(k)}
+
+If $m$ is the number of bits in the address space each table has $m$ entries
+
+The formula to obtain the right number is \textit{succ}$(p + 2^{i-1})$ where $p$ is the address of the node/current peer, $i$ the raws
+
+\paragraph{Chord node insertion and deletion}
+Chord must update the routing information when a node joins
+or leaves the network. Addresses of successor/predecessor nodes must be updated, resources must be moved, and finger tables must be updated. A join or leave requires several messages in the network $O(log^2 N)$
+
+\paragraph{Limitation of structured overlays}
+\begin{itemize}
+    \item Difficult and costly to achieve, especially in dynamic environment because the peers appear and disappears very frequently
+    \item Maintenance of the hash table
+    \item  Organize the structure when a failure happens
+\end{itemize}
+
+\paragraph{Unstructured overlays}
+Built with random algorithm
+
+\begin{itemize}
+    \item \textit{Gossiping}\\
+    Each node gossips with a subset of its neighbors, which in turn gossip with their neighbors, and so on, until the information has spread to a significant portion of the network
+    \item \textit{Superpeers}\\
+    Keeping an index of data for a subnetwork. Each superpeer doesn’t know where the resource it’s locate and instead to extend on all network the request just ask to the peer that are in charge on the subnetwork. Peer organization in the network is hierarchical, some peers are more important than others. Napster’s directory server is an example of superpeer.
+\end{itemize}
+
+\newpage

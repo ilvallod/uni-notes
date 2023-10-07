@@ -1,0 +1,61 @@
+\documentclass[a4paper]{article}
+
+%---------------------------- packages
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[italian]{babel}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{ulem}
+\usepackage{graphicx}
+\usepackage{comment}
+\usepackage{tikz}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    filecolor=black,      
+    urlcolor=black,
+}
+%----------------------------
+%------------------ code
+\usepackage{minted}
+%------------------
+%------------------------------------- title and settings
+\title{\textbf{Distributed and pervasive system}
+\\[1cm]
+\includegraphics[scale=0.12]{images/logo_unimi.png}
+\\[1cm]
+\large 
+    University of Milan\\
+    Master's Degree in Computer Science\\
+    A.Y. 2022/2023
+}
+\date{} %hide date
+\author{Stefano Vallodoro}
+\begin{document}
+\maketitle
+\newpage
+\tableofcontents
+\newpage
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.8em}
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+%----------------------------------
+%---------------------------------- chapters
+\input{chapters/introduction}
+\input{chapters/architecture}
+\input{chapters/communication-model}
+\input{chapters/synchronization}
+\input{chapters/mutual-exclusion}
+\input{chapters/election}
+\input{chapters/fault-tolerance}
+\input{chapters/pervasive-system}
+\input{chapters/context-awareness}
+\input{chapters/blockchain}
+\input{chapters/privacy}
+\input{chapters/lab}
+%----------------------------------
+
+\end{document}
