@@ -1,0 +1,97 @@
+\section{Apprendimento induttivo}
+
+\paragraph{Machine Learning in biometria}
+Il sistema biometrico è un \textit{classificatore}
+
+Nel modo tradizionale abbiamo una serie di if-then per andare al risultato. In ML invece abbiamo un modello generato da una prima fase di learning contenente dei dati di allenamento e dei risultati che ci si aspetta.
+
+\paragraph{Le tre componenti del Machine Learning}
+\begin{itemize}
+    \item \textit{Rappresentazione}, spazio delle ipotesi
+    \item \textit{Valutazione}, come decidiamo se il modello sta lavorando bene
+    \item \textit{Ottimizzazione}, modificare i parametri in modo da minimizzare l’errore
+\end{itemize}
+
+\paragraph{Deductive reasoning}
+\textit{Top-down}, parto dalla teoria
+
+\paragraph{Inductive reasoning}
+\textit{Bottom-up}, parto dalle osservazioni. Principalmente le reti neurali e il machine learning si basano sull’indittuvità imparando dall’esperienza che matura nel tempo
+
+\paragraph{Tipologie di apprendimento}
+\begin{itemize}
+    \item \textit{Supervised}, dati di allenamento includono gli output desiderati
+    \item \textit{Unsupervised}, dati di allenamento non includono gli output desiderati
+    \item \textit{Semi-supervised}, dati di allenamento includono alcuni output desiderati
+    \item \textit{Reinforcement learning}, decisioni prese in funzione della reward
+\end{itemize}
+
+\paragraph{Transfer learning}
+Il modello viene utilizzato e allenato anche per altri task, modificando nel caso i pesi necessari per farlo funzionare anche in altri domini applicativi
+
+\paragraph{Data augmentation}
+Applico trasformazioni come rotazioni, traslazioni e scalature, per far imparare alla rete neurale a individuare oggetti in differenti posizioni, rotazioni e scale.
+
+\paragraph{Rasoio di Occam}
+Principio secondo il quale, in caso di diverse spiegazioni possibili per un fenomeno, la spiegazione più semplice e con meno assunzioni è quella da preferire
+
+%Principali modelli induttivi per ML
+\subsection{Metodi induttivi}
+
+%NN
+\subsubsection{Artificial Neural Networks}
+Le reti feed-forward hanno una struttura a strati che consiste in un numero omogeneo (ma non lineare) di elementi di elaborazione. Il segnale parte da sinistra e si propaga a destra. Il neurone elabora come un punto di vista, attraverso i suoi pesi guarda cosa hanno fatto i neuroni precedenti. Se cambiano di pesi, lo stesso neurone vede le informazioni sotto un altro punto di vista. L’uscita sarà una decisione
+
+\paragraph{Funzione di attivazione}
+E' utilizzata per determinare l'output di un neurone in base al suo input. Esistono diverse funzioni di attivazione, ma tutte accettano un input numerico e generano un output in base a una regola specifica
+
+\paragraph{Back-propagation}
+Consiste nell'aggiornare i pesi della rete attraverso il calcolo dell'errore tra l'output prodotto dalla rete e il valore desiderato. Si parte dall'output della rete e si calcola l'errore rispetto al valore desiderato, che viene poi propagato all'indietro nella rete per calcolare gli aggiornamenti da applicare ai pesi. L'obiettivo è minimizzare l'errore di predizione della rete.
+
+
+%Metodi tradizionali
+\subsection{Metodi tradizionali}
+
+\paragraph{K-Nearest Neighbors}
+\begin{enumerate}
+    \item Calcolo la distanza da gli altri record di training, distanza euclidea
+    \item Identifico i vicini \textit{k}
+    \item Uso le etichette delle classi dei vicini per determinare l'etichetta della classe del record. Prendo la classe che ha il numero maggiore di etichette fra gli elementi \textit{k}
+\end{enumerate}
+
+\paragraph{Decision tree}
+Non prendo decisioni in parallelo
+
+%Deep Learning
+\subsection{Deep Learning}
+L’approccio funziona come una rete neurale classica. Costituita da una fase di training e una fase di deploy. Si aggiungono strati per diminuire il numero di nodi totali necessari
+
+\paragraph{Shallow vs Deep} 
+La differenza tra reti shallow e deep riguarda la profondità della rete, ovvero il numero di layer di cui essa è composta
+
+%CNN
+\subsubsection{Convolutional Neural Network}
+E' una rete neurale con alcuni strati convoluzionali. Fa quello che fa la fully connected network (e probabilmente ne ha una al suo interno). L’informazione viaggia dagli ingressi alle uscite in modo diretto. L’idea è quella di usare dei \textit{kernel} di convoluzione.
+
+\paragraph{Convoluzione}
+Spostiamo di pixel in pixel il nostro kernel. Se trovo la forma nell’immagine che è simile a quella nel kernel, nell’uscita della convoluzione, \textit{feature map}, troveremo un valore alto. Avrò una feature map per ogni filtro
+
+\paragraph{Rectified Linear Unit}
+Il rettificatore è un modulo che dato un segnale, elimina la parte negativa. Voglio una risposta solo se hai trovato un’immagine simile a quella del kernel, se il risultato della convoluzione è negativo o basso non mi interessa. 
+
+\paragraph{Modulo di pooling}
+Semplificare il problema e guardarlo in uno spazio più piccolo. Se in una certa zona ho trovato un massimo, per me quella zona corrisponde al valore di massimo. Ottengo una nuova immagine ma più piccola
+
+\paragraph{Flattening}
+Ho più feature map, creo il vettore unico, mando nella rete fully
+
+\paragraph{Esempio end-to-end}
+Parto da un'immagine, faccio la convoluzione, applico max pooling, poi di nuovo convoluzione, lo faccio tante volte. La matrice di feature che ottengo, verrà rianalizzata da un altro kernel, per creare un’interpretazione che sale di livello. Alla fine creo un unico vettore chiamato \textit{flat} e dovrò classificarlo, per farlo userò una rete tradizionale. In base al tipo di vettore verrà associato un oggetto
+
+\paragraph{Autoencoders}
+Sono una classe di algoritmi di apprendimento che utilizzano una rete neurale per codificare e decodificare dati. L'obiettivo è quello di apprendere una rappresentazione compatta di un insieme di dati, in modo da poterli ricostruire con una bassa perdita di informazione.
+
+\paragraph{Generative Adversarial Network}
+Le GAN, sono un tipo di reti neurali artificiali costituite da due parti principali: un \textit{generatore} e un \textit{discriminatore}, che competono tra di loro in modo da generare dati sintetici difficili da distinguere da quelli reali. Il generatore cerca di produrre immagini realistiche a partire da un input, mentre il discriminatore cerca di distinguere le immagini prodotte dal generatore da quelle reali.
+
+\newpage

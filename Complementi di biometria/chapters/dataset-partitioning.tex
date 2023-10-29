@@ -1,0 +1,20 @@
+\section{Dataset partitioning}
+Non bisogna usare tutti i dati per l’allenamento, devono essere correttamente usati per evitare bias nel risultato. Ci sono due principali problemi che possono sorgere utilizzando gli stessi dati per addestrare e valutare il modello
+\begin{itemize}
+    \item \textit{Underfitting}, il modello è poco adeguato ai dati
+    \item \textit{Overfitting}, il modello offre alte performance con i dati noti ma si comporta male con i dati mai visti
+\end{itemize}
+
+\paragraph{k-Fold Cross Validation}
+E' una specifica tecnica di cross-validation in cui i dati di training vengono suddivisi in \textit{k} parti uguali, il modello viene addestrato su $k-1$ parti e testato sulla parte rimanente. Questo processo viene ripetuto \textit{k} volte, in modo che ogni parte sia usata come set di test una volta. Alla fine, si calcolano le medie delle prestazioni del modello sui \textit{k} set di test per ottenere una stima della performance siu dati non visti
+
+\paragraph{Stratified k-FCV}
+Inserisce un numero uguale di campioni di ogni classe su ogni partizione in modo da mantenere la distribuzione delle classi uguali in tutte le partizioni, in modo da evitare che un particolare fold contenga solo esempi di una sola classe.
+
+\paragraph{5x2 Cross Validation}
+L’intero set di dati è diviso in modo random in due subset \textit{A} e \textit{B}. Il modello viene prima costruito utilizzando \textit{A} e validato utilizzando il subset B. Successivamente, il processo viene invertivo
+
+\paragraph{Leave one out}
+Prevede di utilizzare ogni singola osservazione come set di test, e il resto del dataset come set di training. Per ogni si rimuove una sola osservazione dal dataset e si addestra il modello sulle rimanenti.
+
+\newpage

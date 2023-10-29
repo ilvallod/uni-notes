@@ -1,0 +1,100 @@
+\section{Image acquisition}
+I sensori si dividono principalmente in due famiglie: \textit{CCD} e \textit{CMOS}. Entrambi sono costituiti da una matrice di fotosensori
+
+\paragraph{CCD: Charge-Coupled Device}
+E' un sensore che ha un funzionamento simile ad un \textit{fotodiodo}. Un fotodiodo è un dispositivo semiconduttore che converte la luce in corrente elettrica. Acquisisce luce elettricamente, immagazzina la carica in ogni pixel e poi legge la carica dei pixel per creare l'immagine. È abbastanza costoso ma con qualità altissima
+
+\paragraph{EMCCD: Electron-Multiplying CCD}
+Variazione del CCD in cui la carica accumulata in ogni pixel viene amplificata più volte attraverso un moltiplicatore di elettroni, prima di essere letta. Ciò aumenta la sensibilità del sensore e riduce il rumore del segnale
+
+\paragraph{CMOS: Complementary Metal-Oxide Semiconductor}
+Ogni singolo fotodiodo è accoppiato ad un convertitore, riduttore di rumore, e circuiti di digitalizzazione. Permette di gestire meglio il singolo pixel
+
+Non ci sono $3$ sensori uno per canale (RGB) ma un solo sensore e ogni singolo pixel può vedere o blu o verde o rosso
+
+\paragraph{Shutter}
+Componente tipico di una fotocamera, sia meccanica che elettronica. Il modo in cui il sensore della fotocamera legge il segnale di determinati pixel può essere diverso
+
+\paragraph{Rolling shutter}
+Il rolling shutter acquisisce l'immagine scansionando il sensore una linea alla volta, dal lato sinistro a quello destro. Ciò significa che l'immagine non viene acquisita istantaneamente, ma viene registrata in modo sequenziale. 
+
+Gli effetti negativi del rolling shutter sono:
+\begin{itemize}
+    \item \textit{Wobble-jello effect}, effetto gelatina
+    \item \textit{Skew}, l’immagine si piega diagonalmente in una direzione o un’altra
+    \item \textit{Spatial Aliasing}, pixel verticali adiacenti si spostano
+    \item \textit{Temporal Aliasing}, quando un'immagine che contiene un movimento viene catturata con una frequenza di campionamento troppo bassa
+\end{itemize}
+
+\paragraph{Global shutter} 
+Tutte le righe di pixel dell'immagine sono acquisite nello stesso istante, senza differenze di tempo tra di esse. 
+
+Le fotocamere CCD utilizzano tipicamente shutter globali. Nonostante questa modalità di shutter non abbia differenze temporali sull'immagine, la lettura è tipicamente lenta a causa dell'avere solo un ADC.
+
+\paragraph{Filtri ottici}
+Strumento che trasmette selettivamente la luce con particolari proprietà come: una o più lunghezza d’onda (colore); polarizzazione, selezionando solo le onde luminose che vibrano in una determinata direzione, bloccando quelle che vibrano in altre direzioni; attenua l’intensità.
+
+Ad esempio nel day/night surveillance hanno un filtro che permette di tagliare l’infrarosso in modo tale da migliorare la visualizzazione notturna, di giorno viene inserito per poter filtrare la luce IR
+
+\uline{Multispectral imaging} è la scansione della superficie e della sub-superficie con diverse lunghezze d’onda e colori da diverse angolazioni fino ad una profondità di 4 mm
+
+\paragraph{Focalizzazione}
+Cosa significa a fuoco per un sensore digitale? Che i raggi di $1$ punto arrivino almeno nello stesso pixel
+
+\paragraph{Profondità di campo}
+Range delle distanze dell’oggetto su cui l’immagine è sufficientemente ben focalizzata. Una maggiore profondità di campo implica che una vasta gamma di distanze nell'immagine appaia nitida, mentre una profondità di campo più ridotta comporta che solo un'area limitata dell'immagine sarà a fuoco.
+
+\paragraph{Diaframma}
+Man mano che il diaframma si chiude, passeranno sempre meno raggi all’interno della camera
+
+\paragraph{Tempo di esposizione}
+Il tempo di esposizione si riferisce alla durata in cui il sensore dell'immagine viene esposto alla luce durante lo scatto di una foto. Un tempo di esposizione più lungo permette di catturare più luce e quindi immagini più luminose, mentre un tempo di esposizione più breve può catturare meno luce, ma può consentire di congelare i movimenti o di ottenere un'immagine più nitida
+
+\paragraph{WDR}
+\textit{Wide Dynamic Range} è un algoritmo che combina più esposizioni di un'immagine a diverse lunghezze di esposizione, segue poi la fusione dell’immagine che mostra dettagli sia nelle aree più luminose che in quelle più scure. In questo modo, il WDR consente di ottenere immagini più bilanciate e dettagliate anche in situazioni di contrasto estremo
+
+\paragraph{HDR}
+\textit{High Dynamic Range} è una tecnologia utilizzata per gestire un'ampia gamma di luminosità. L'HDR combina più immagini scattate con diverse esposizioni, permettendo di avere un'immagine finale con maggiori dettagli sia nelle zone di ombra che nelle zone di luce. In pratica, l'HDR crea un'immagine finale che ha una gamma dinamica più ampia rispetto a quella che l'occhio umano può percepire
+
+\paragraph{Macro}
+In fotografia sono degli obiettivi che ci permettono di avvicinarci al soggetto a tal punto che ci sia un rapporto 1:1 tra il soggetto fotografato e la dimensione dello stesso proiettata sul sensore
+
+\paragraph{Frame rate}
+Il framerate è la frequenza di cattura o riproduzione dei fotogrammi che compongono un filmato
+
+%Lenti
+\subsection{Lenti}
+Le lenti possono essere utilizzate in diversi sistemi di visione per migliorare la qualità dell'immagine, regolare la quantità di luce che entra nel sistema e controllare la profondità di campo. Senza lenti, la luce entrerebbe in modo non controllato, producendo immagini poco chiare e fuori fuoco.
+
+\paragraph{Problemi delle lenti}
+I problemi che possiamo avere utilizzando le lenti sono:
+\begin{itemize}
+    \item \textit{Vignettatura}, si notano i lati della foto scuri
+    \item \textit{Compound thick lens}, quando una lente è troppo spessa e quindi la sua curvatura non è sufficiente per correggere completamente l'aberrazione sferica e l'aberrazione cromatica.
+    \item \textit{Aberrazione sferica}, quando le onde di luce provenienti dal centro della lente sono focalizzate in modo diverso rispetto alle onde provenienti dai bordi della lente, causando un effetto di sfocatura dell'immagine
+    \item \textit{Aberrazione cromatica}, quando le lenti non sono in grado di focalizzare tutti i colori dello spettro luminoso nello stesso punto. I colori arrivano su pixel diversi. La soluzione è quella di aggiungere un’altra lente con le cavità opposte in modo tale che l’effetto venga annullato con un’altra aberrazione cromatica
+\end{itemize}
+
+\paragraph{Lente asferica} 
+Una lente che ha una forma non sferica ma è progettata per correggere l'aberrazione sferica
+
+\paragraph{Lenti liquide}
+Composta da due \textit{fluidi isodensi} (uno più denso e uno meno denso) contenuti al suo interno ne modificano la curvatura a seconda della tensione elettrica che li attraversa.
+
+Sono composte da due superfici in vetro o plastica trasparente e un fluido trasparente e immiscibile, come l'olio. Quando il fluido viene spostato all'interno della lente, la superficie della lente si curva, producendo un cambiamento nel potere diottrico della lente. Consentono di regolare rapidamente la messa a fuoco senza dover spostare fisicamente l'obiettivo della fotocamera
+
+L’uso di lenti liquide permette oltre alla messa a fuoco, anche magnificazione ottica in uno spazio molto compatto
+
+\paragraph{Magnificazione}
+La magnificazione si riferisce all'aumento dell'immagine di un oggetto ed è definita come il rapporto tra la dimensione dell'immagine e la dimensione dell'oggetto.
+
+Con una \textit{singola lente}, la magnificazione può essere calcolata in base alla distanza focale della lente e alla distanza dell'oggetto dalla lente stessa. Con \textit{due lenti}, la magnificazione può essere aumentata utilizzando un'oculare. In questo caso, la prima lente crea un'immagine dell'oggetto, che viene poi ingrandita ulteriormente dalla seconda lente, l'oculare.
+
+\paragraph{Magnificazione variabile}
+In ottica un obiettivo zoom è un obiettivo complesso la cui lunghezza focale può variare. Lo zoom può essere ottico oppure digitale
+\begin{itemize}
+    \item \textit{Zoom ottico}, una lente (lente di fuoco) che avrà l’obiettivo di mettere a fuoco e un insieme di lenti chiamate sistema di lenti afocali che saranno utilizzate per effettuare la magnificazione variabile
+    \item \textit{Zoom digitale}, solamente lo zoom ottico ingrandisce veramente, quello digitale scala l’immagine senza aggiungere informazioni allo scatto
+\end{itemize}
+
+\newpage

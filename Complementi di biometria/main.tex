@@ -1,0 +1,54 @@
+\documentclass[a4paper]{article}
+%--------------------------------- package
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[italian]{babel}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    filecolor=black,      
+    urlcolor=black,
+}
+\usepackage{booktabs}
+\usepackage{ulem}
+\usepackage{graphicx}
+\usepackage{comment}
+%---------------------------------
+%-------------------------------------- title and settings
+\title{\textbf{Complementi di biometria}
+\\[1cm]
+\includegraphics[scale=0.12]{images/logo_unimi.png}
+\\[1cm]
+\large 
+    University of Milan\\
+    Master's Degree in Computer Science\\
+    A.Y. 2022/2023
+}
+\date{} %hide date
+\author{Stefano Vallodoro}
+\begin{document}
+\maketitle
+\newpage
+\tableofcontents
+\newpage
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.8em}
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+%--------------------------------------
+%-------------------------------------- chapters
+\input{chapters/introduzione.tex}
+\input{chapters/sensori.tex}
+\input{chapters/dataset-partitioning.tex}
+\input{chapters/apprendimento-induttivo.tex}
+\input{chapters/sistemi-multimodali.tex}
+\input{chapters/flusso-ottico.tex}
+\input{chapters/privacy.tex}
+\input{chapters/videosorveglianza.tex}
+\input{chapters/vulnerabilità.tex}
+\input{chapters/ambient-intelligence}
+%--------------------------------------
+\end{document}

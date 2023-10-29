@@ -1,0 +1,224 @@
+\section{Introduzione}
+La biometria è l’insieme di tecniche automatiche per il riconoscimento degli individui basato sulle loro caratteristiche fisiche e comportamentali.
+
+Il riconoscimento biometrico può essere suddiviso in due categorie:
+\begin{itemize}
+    \item Verifica dell’identità: Autenticazione, si conferma o si nega l’identità dichiarata dall’utente (1:1)
+    \item Ricerca dell’identità: Identificazione (1:N)
+\end{itemize}
+
+I metodi di autenticazione si basano su due principali modalità: possesso (token based) e conoscenza. Nei metodi biometrici invece il riconoscimento avviene in base a caratteristiche fisiche e/o comportamentali dell’individuo
+
+\paragraph{Vantaggi metodi biometrici}
+\begin{itemize}
+    \item Solo i metodi biometrici possono realizzare una identificazione/autenticazione negativa (il sistema dice che io non sono lui)
+    \item Riducono la possibilità di reclami di ripudiazione
+\end{itemize}
+
+\paragraph{Svantaggi metodi biometrici}
+\begin{itemize}
+    \item Hanno un costo maggiore
+    \item Alcune persone li vedono come un’invasione della propria privacy
+    \item Rispondono con un livello di matching e non con una decisione binaria 
+\end{itemize}
+
+\paragraph{Le 7 proprietà del tratto biometrico}
+\begin{enumerate}
+    \item \textit{Universalità}, ogni persona deve possedere questo tratto o caratteristica
+    \item \textit{Unicità}, due persone non devono avere lo stesso tratto uguale
+    \item \textit{Permanenza}, deve essere invariante nel tempo
+    \item \textit{Misurabilità}, il tratto deve poter essere esaminato quantitativamente. Devo poter estrarre dei dati quantitativi
+    \item \textit{Performabilità}
+    \item \textit{Accettabilità}
+    \item \textit{Circonvenzione}, grado di difficoltà nell’ingannare il sistema
+\end{enumerate}
+
+\paragraph{Enrollment e riconoscimento}
+\begin{itemize}
+    \item \textit{Enrollment}: Il tratto biometrico viene per la prima volta acquisito dal sistema e registrato. Da questo posso estrarre le caratteristiche che vengono codificate in un template e salvate in un database
+    \item \textit{Riconoscimento} (Identificazione/Verifica): Il tratto biometrico viene nuovamente acquisito, se risulta sufficientemente aderente alle informazioni registrate nel sistema biometrico l’accesso è consentito. Vengono ripetute le azioni viste in enrollment (acquisizione, feature extraction e coding). Successivamente avverrà il matching fra il template creato e quello presente nel database
+
+    L’utente dichiara la propria identità che è sfruttata dal DB per andare a prendere solo il template associato a quelle informazioni.
+\end{itemize}
+
+\paragraph{Impronta}
+L’impronta digitale può essere acquisita tramite sensori termici, ottici, scanner tradizionali. Il riconoscimento avviene attraverso tre approcci:
+\begin{enumerate}
+    \item \textit{Correlation-based}, correlazione pixel per pixel. Trasla le immagini
+    \item \textit{Ridge feature-based}, orientamento, distribuzione e posizione dei ridge
+    \item \textit{Minutia-based}, dove terminano i ridge e dove ci sono biforcazioni
+\end{enumerate}
+
+Il sample della impronta è un'immagine in toni di grigio. Le impronte si dividono in base ai core e delta e all'orientamento dei ridge in \textit{Arch, Loop, Whorl}
+
+Un'impronta può essere esaminata su $3$ livelli:
+\begin{itemize}
+    \item \textit{Livello I}, pattern generale dell’impronta 
+    
+    \uline{Ridge counting}: Misura dei ridge che attraversano una linea immaginaria passante tra due minutiae
+
+    \uline{Filtro di Gabor}: Toglie il rumore, esalta i ridge aumentando il contrasto
+
+    \uline{FingerCode}: Lo utilizziamo quando si lavora a livello $1$ e non si hanno le minutiae ma solo gli orientamenti. Genera un codice univoco per ogni impronta digitale
+    
+    \item \textit{Livello II}, minutiae. Terminazioni e biforcazioni.
+    \item \textit{Livello III}, posizione di pori
+\end{itemize}
+
+\paragraph{Volto}
+Tratto biometrico tra i meno intrusivi, usato normalmente dalle persone per riconoscersi. Il viso può essere acquisito tramite telecamere, webcam, fotocamere, smartphone, scanner 3D. Il matching avviene tramite due approcci:
+\begin{itemize}
+    \item \textit{Eigenfaces}, l'autovettore della matrice delle covarianze fra molti volti da allenamento
+    \item \textit{Attributi}, si misurano delle caratteristiche come la distanza fra gli occhi, la lunghezza del naso
+\end{itemize}
+
+\paragraph{Mano}
+Molto ben accettato dagli utenti perchè poco invasivo. Le mani possono essere riconosciute tramite i sensori come CCD di tipo visibile o infrarosso. Gli algoritmi utilizzati rilevano i contorni e la forma o analizzano le vene della mano
+
+\paragraph{Iride}
+L’iride è considerato come il tratto biometrico più accurato, dopo il DNA, e performante anche se poco accettato perchè considerato invasivo. I sensori utilizzati possono essere CCD ad alta definizione di tipo visibile o infrarosso oppure ottiche speciali
+
+Le feature che maggiormente sono interessanti per il sistema biometrico si vedono meglio con luce IR piuttosto che con luce visibile
+
+\begin{itemize}
+    \item Il sistema di acquisizione deve poter risolvere con almeno $70$ pixel il raggio dell’iride
+    \item Si usano CCD capaci di acquisire nel vicino infrarosso (NIR)
+    \item E’ necessario usare telecamere con ottiche variabili per trovare l’occhio nel volto e poi zoomare verso l’occhio
+    \item Se manca più del 50\% dell’iride occorre acquisire ancora una volta l’iride
+    \item Di solito bastano $256$ byte per rappresentare una iride, IRISCODE
+    \item La comparazione è effettuata fra Iriscode di $256$ byte attraverso il calcolo della distanza di Hamming, è uno XOR. Se prendo iridi di persone diverse e le confronto, sono talmente diverse che è come confrontare stringhe di bit casuali
+\end{itemize}
+
+L’exploit di Daugman, riconoscimento con iride da foto ad alta risoluzione nel visibile a 18 anni di distanza, mostra la possibilità del pericolo di screening di massa dagli archivi di foto (governativi, social, ...). Enorme problema di privacy nel futuro
+
+\paragraph{Firma}
+La firma è un metodo molto diffuso e semplice ma ha una bassa accuratezza. La variabilità della firma è molto alta. Il riconoscimento è basato su coordinate $x,y$, pressione, inclinazione della penna.
+
+Difficilmente falsificabile, nel caso di firma online, ma elevata
+similitudine interclasse con le firme brevi o troppo semplici
+
+\paragraph{Voce}
+\begin{itemize}
+    \item \textit{Speech recognition}, riconoscimento di quello che si è detto
+    \item \textit{Speaker recognition}, riconoscimento della persona che sta parlando
+\end{itemize}
+
+\paragraph{Sistemi multimodali}
+Più tecnologie biometriche in un sistema. Posso utilizzare tratti biometrici completamente diversi, impressioni multiple, estrarre informazioni con due tecniche diverse, utilizzare sensori diversi
+
+\paragraph{Soft biometrics}
+Alcuni tratti biometrici non posseggono le 7 caratteristiche necessarie quindi non permettono di identificare in modo univoco una persona, ma di caratterizzarla o di rendere più robusto il sistema. Ad esempio: genere, colore della pelle, colore degli occhi, peso, altezza
+
+\paragraph{Variabilità intraclasse}
+Si intende la variazione del sample o delle feature dello stesso individuo. Questa variazione può essere dovuta a rumore, variazione dello sfondo, variazioni del tratto, parziali occlusioni
+
+\paragraph{Variabilità interclasse}
+Variazione del sample o delle feature acquisiti da individui diversi
+
+\paragraph{Acquisizione}
+La cura nel processo di acquisizione influenza pesantemente l’accuratezza finale del sistema. Il sample deve essere di buona qualità per poter estrarre le caratteristiche e per salvarlo nel db, i sistemi di controllo della qualità producono un indice di qualità del sample acquisito. Se l’indice è sufficientemente alto si può procedere all’estrazione delle caratteristiche, altrimenti si richiede una nuova acquisizione.
+
+Ad esempio per il volto si fa riferimento alle regole ICAO.
+
+Il processo di acquisizione si suddivide in due fasi:
+\begin{itemize}
+    \item \textit{Valutazione della qualità}
+    \item \textit{Segmentazione}, selezionare la regione di interesse dell’immagine acquisita
+\end{itemize}
+
+\paragraph{Rappresentazione}
+Visualizzazione del problema della rappresentazione in uno spazio delle feature N-dimensionale. Vogliamo che si sia \textit{bassa variabilità intraclasse} e \textit{alta variabilità interclasse}
+
+\paragraph{Genuini e impostori}
+\begin{itemize}
+    \item \textit{Genuino}, indica un individuo che accede al sistema e ha titolo per farlo
+    \item \textit{Impostore}, chi prova ad accedere senza averne titolo
+\end{itemize}
+
+\paragraph{Problema della verifica}
+Dato in ingresso (query) un insieme di caratteristiche $X_Q$ e la dichiarata identità $I$ occorre determinare se $(I,X_Q)$ appartengono a $w_1$(genuino) o $w_2$(impostore). Tipicamente le caratteristiche $X_Q$ vengono confrontate con quelle $X_I$, il template memorizzato nel sistema associato all'identità $I$. Si tratta di una comparazione con soglia
+\[
+(I,X_Q) \in
+\begin{cases}
+  w_1 & \text{se } S(X_Q,X_I) \geq T \\
+  w_2 & \text{altrimenti }
+\end{cases}
+\]
+
+Dove $S$ è il similarity score o match score che misura la similitudine tra $X_Q$ e $X_I$ e $T$ è la soglia prefissata
+
+\paragraph{Problema dell'identificazione}
+Il sistema controlla se i tuoi dati biometrici corrispondono ad un insieme di
+identità registrate. Dato in ingresso (query) un insieme di caratteristiche $X_Q$, devo determinare l'identità $I_k$ con $k$ appartenente all'insieme ${1,2,3,\dots,M,M+1}$
+
+Dove ${1,2,3,\dots,M}$ sono le $M$ identità registrate nel sistema e $M+1$ rappresenta il caso si \textit{reiezione}. Si tratta di M comparazioni con soglia
+
+\paragraph{Distanza fra i template}
+I template non sono mai uguali. Esiste sempre una distanza nello spazio delle feature che separa i template anche della stessa persona. Se si riscontrasse una distanza fra $X_Q$ e $X_I$ nulla (il valore di $S$ è il massimo valore ammissibile) probabilmente saremmo di fronte ad un replay attack, ovvero una copia illecita di un template memorizzato che viene riproposto in ingresso per frodare il sistema.
+
+\paragraph{FM e FNM}
+\begin{itemize}
+    \item \textit{False match, errore di tipo I}, l'impostor score è maggiore della soglia $T$ impostata. Il ladro entra in casa perché il sistema biometrico lo ha scambiato per voi
+    \item \textit{False non match, errore di tipo II}, il genuine score è minore della soglia $T$ impostata. Voi non entrate in casa
+\end{itemize}
+Andando a rapportare questi valori rispettivamente con il totale dei genuini e il totale degli impostori otterremo i tassi FMR(T) e FNMR(T), che variano in funzione della soglia $T$ scelta.
+
+\paragraph{DET e ROC}
+Per descrivere le performance del sistema è necessario disporre di un insieme di dati e curve di funzionamento
+
+Le performance vengono espresse mostrando come variano i tassi di errore al variare di $T$. Posso fare un plot, dove ogni punto corrisponde al valore che ha come x il valore di FMR e come y il valore di FNMR. Con la soglia a $-\infty$ entrano anche gli impostori, con la soglia a $+\infty$ non entra nessuno. Sicuramente la curva passa da i punti $(1,0)\text{ e }(0,1)$ che rappresentano i casi estremi.
+
+La curva DET e la curva ROC mostrano le stesse informazioni. Con un sistema ideale collassano sugli assi. Regolando la soglia $T$ possiamo regolare il livello di sicurezza ed individuare le regioni di funzionamento.
+
+\paragraph{EER}
+L’Equel Error Rate è il tasso di errore corrispondente all’unico punto nel quale abbiamo FNMR $=$ FMR. E' l’unico numero singolo che può riassumere il funzionamento del sistema
+
+\paragraph{Scalabilità}
+I sistemi che devono gestire una grande quantità di identità dovrebbero essere in grado di operare efficacemente quando il numero di utenti registrati nel DB aumenta. In più si richiede che il tasso di peggioramento delle prestazioni sia minore del tasso di nuovi utenti immesso
+
+L’obiettivo di gestire efficacemente la complessità delle ricerche rispetto all’incremento del numero di template nel DB del sistema può essere raggiunto solo con un'attenta organizzazione dei DB. Un DB organizzato permette di non confrontare un template in ingresso con tutti i template ma solo con quelli contenuti in una partizione
+
+Quando il DB viene creato, i template vengono disposti nelle partizioni (bins). Si ha \textit{binning error} quando un individuo presenta i propri tratti biometrici al sistema e l’algoritmo di classificazione del tratto sbaglia il bin.
+
+\subsection{Reporting data}
+Dobbiamo fare il \textit{report} dei dati e delle distribuzioni analizzate
+\begin{enumerate}
+    \item Curva DET
+    \item EER
+    \item CMC, Cumulative Match Characteristic
+    \item Probabilità d'errore \textit{p}
+    \item FTE, FTA
+    \item Attacchi
+    \item Performance results
+\end{enumerate}
+
+\paragraph{Analizzare curva DET}
+Esistono due diverse strategie per calcolare e analizzare DET
+\begin{itemize}
+    \item \textit{Inferenza statistica}, si inducono le caratteristiche di una popolazione dall’osservazione di una parte di essa detta campione
+    \item \textit{Calcolo delle probabilità}, si conoscono le curve
+\end{itemize}
+
+Supponiamo di poter variare la soglia \textit{s} e di fissarla ad un valore \textit{T} in mezzo fra il picco degli impostori e quello dei genuini. Un certo numero di persone appartenenti al gruppo dei genuini sono sotto la soglia \textit{T} e quindi non saranno autorizzati dando luogo ad errori di False Non-Match (FNM).
+Al contrario una parte degli impostori hanno valori di match sopra la soglia quindi saranno autorizzati. Nel caso di indentificazione positiva i tassi vengono ripettivamente chiamati FAR, FNAR
+
+\paragraph{Regola dei 3}
+Il tasso di errore \textit{p} per il quale si ha la probabilità di zero errori in N prove è circa $p=\frac{3}{N}$, per un intervallo di confidenza del $95\%$. Un altro modo di leggere la cosa: se abbiamo un sistema che commette zero errori su N prove non dobbiamo pensare di avere un sistema con $p=0$, ma con il $95\%$ di confidenza abbiamo un sistema che ha $p=\frac{3}{N}$
+
+\paragraph{Regola dei 30}
+Per essere sicuro con intervallo di confidenza del $90\%$ che il tasso di errore vero sia tra il $\pm30\%$ del tasso di errore osservato, ci devono essere almeno $30$ errori
+
+\paragraph{Failure To Enroll rate}
+E' la percentuale della popolazione per i quali il sistema non è in grado di generare templates. Quanti utenti in media non riescono a completare la fase di enrollment
+
+\paragraph{Failure To Acquire rate}
+E' la percentuale di transazioni per le quali il sistema non è in grado di acquisire o individuare un’immagine di qualità sufficiente. Utenti che hanno problemi sul modulo di acquisizione dovuto magari a tratti biometrici rovinati o non validi
+
+\paragraph{Attacchi}
+Gli attacchi possono essere
+\begin{itemize}
+    \item \textit{Zero-Effort attempts}
+    \item \textit{Presentation Attack}, l’impostore crea dei falsi o artefatti 
+\end{itemize}
+
+\newpage

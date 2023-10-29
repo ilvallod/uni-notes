@@ -1,0 +1,34 @@
+\section{Sistemi multimodali}
+I sistemi biometrici multimodali sono quelli che utilizzano o sono capaci di utilizzare più di uno tratto biometrico fisiologico o comportamentale. I sistemi multimodali sono più accurati dei sistemi che li compongono
+
+\paragraph{Vantaggi}
+\begin{itemize}
+    \item Aumenta la copertura della popolazione riducendo l'FTE
+    \item Sono un efficace metodo antispoofing
+\end{itemize}
+
+\paragraph{Svantaggi}
+\begin{itemize}
+    \item Più costosi
+    \item Più lenti
+\end{itemize}
+
+\paragraph{Livello di fusione}
+Per confrontare fra loro i valori di diversi matcher è necessario eseguire prima un’operazione di normalizzazione
+\begin{enumerate}
+    \item \textit{Livello di feature}, prima dei matcher e dei moduli di decisione.
+    \item \textit{Livello di matchscore}, tecnica più diffusa. Possiamo fare fusione pre matching e after matching.
+    \begin{itemize}
+        \item \textit{classificatore}, è un modulo che avendo un ingresso $s_1, s_2, \dots, s_n$ , produce direttamente l’uscita impostore/genuino
+        \item \textit{combinatore}, è un modulo che combina in modo lineare, non lineare, logico/combinatorio, i valori $s_1, s_2, \dots, s_n$ e passa un unico valore \textit{S} al decisore (che può essere di nuovo un classificatore o una soglia)
+    \end{itemize}
+    \item \textit{Livello del modulo di decisione}
+\end{enumerate}
+
+\paragraph{Sistemi multimodali gerarchici}
+Acquisizioni biometriche in cascata a seconda del risultato dell'identificazione precedente
+
+\paragraph{Fusione con qualità del tratto}
+Uno score basso in ingresso può dipendere dalla qualità del tratto in input, non per forza un caso di impostore
+
+\newpage

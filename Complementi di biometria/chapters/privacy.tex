@@ -1,0 +1,27 @@
+\section{Privacy}
+
+\paragraph{Continuous authentication}
+Autenticazione biometrica non in modo istantaneo ma in modo continuo
+
+\paragraph{Silent authentication}
+L’utente non deve neanche accorgersi che sta facendo l’autenticazione. Esempio è l'utilizzo di smartwatch con il controllo dei movimenti
+
+\paragraph{Classical password protection}
+L’approccio tradizionale con password non è applicabile in quanto il dato biometrico cambia continuamente, diversamente è un replay attack. L’hash sarà sempre diverso
+
+\subsection{Biometria cancellabile}
+E' un modo per incorporare la protezione e le funzionalità sostitutive in biometria per creare un sistema più sicuro. Distorsione intenzionale e sistematicamente ripetibile delle caratteristiche biometriche
+
+\paragraph{Feature transformation}
+\begin{itemize}
+    \item \textit{Bio-hashing}, anche detto \textit{salting}, la funzione di trasformazione è invertibile. Utilizzato per aggiungere un valore casuale al template biometrico prima di applicare la trasformazione con la chiave \textit{K}. In questo modo, anche se un attaccante dovesse compromettere il sistema e ottenere il template trasformato $F(T,K)$, non sarebbe in grado di risalire al template originale senza conoscere il valore del salting
+    \item \textit{Non–invertible transformation}, una funzione che rende difficile dal punto di vista computazionare invertire un template trasformato in un template originale
+\end{itemize}
+
+\paragraph{Helper data} 
+Template crittato memorizzato
+
+\paragraph{Key binding}
+Associare una chiave crittografica a una identità
+
+\newpage

@@ -1,0 +1,50 @@
+\section{Vulnerabilità dei sistemi biometrici}
+Possiamo distinguere principalmente due tipi di attacchi
+\begin{itemize}
+    \item \textit{Attacchi indiretti}, dall’interno del sistema. Ad esempio manipolando le reference biometriche all’interno del database
+    \item \textit{Attacchi diretti}, attraverso il sensore
+\end{itemize}
+
+\paragraph{Presentation Attack Detection}
+Determinazione automatica del presentation attack. I metodi di rilevamento della liveness sono definiti come subset dei metodi di PAD
+
+\paragraph{Presentation Attack Instrument}
+Oggetto usato nel presentation attack. Anche noto come \textit{artefact}
+
+\paragraph{Adversarial attack}
+Mira a ingannare il matcher o l'algoritmo introducendo delle perturbazioni impercettibili all'occhio umano nell'input. 
+
+Esistono all’interno di questa categoria diverse tipologie di attacchi
+\begin{itemize}
+    \item \textit{Attacchi whitebox}, l’attaccante ha accesso ai parametri del modello
+    \item \textit{Attacchi blackbox}, l’attaccante non ha accesso ai parametri del modello
+    \item \textit{Non-targeted adversarial attack}, l'obiettivo è solo quello di generare input manipolati che siano classificati erroneamente dal modello, senza preoccuparsi di quale classe venga assegnata
+    \item \textit{Targeted adversarial attack}, generare input manipolati che siano classificati in una classe specifica
+\end{itemize}
+
+\subsection{Variazioni delle immagini}
+\begin{enumerate}
+    \item \textit{Controllo in IR}\\
+    Le immagini stampate o le immagini mostrate tramite schermi non possono essere usati per attaccare le camere IR. Una stampa o l’utilizzo di uno schermo non vengono visualizzati da un sistema infrarosso
+    \item \textit{Approcci compositi},\\
+    Usando diversi sistemi potremmo acquisire informazioni differenti sui soggetti diminuendo così la capacità di poter truffare un sistema di questo genere. Solitamente si utilizzano telecamere del visibile, NIR e 3D per realizzare un’immagine tridimensionale
+    \item \textit{Ricerca dei Moirè}\\
+    Con effetto moiré si indica una figura di interferenza, punteggiature dello schermo.
+    Visti i pattern periodici nello spettro, potrebbe essere un fake
+    \item \textit{Tecniche Challenge–Response}\\
+    Il sistema sfida l’utente con alcune istruzioni casuali, la risposta viene controllata per verificare se l’utente ha seguito le istruzioni. Ad esempio il sistema chiede all’utente di dire una determinata frase davanti al sensore
+\end{enumerate}
+
+\subsection{Possibili attacchi su sistema voice}
+\begin{enumerate}
+    \item \textit{Impersonation}, fingendosi un'altra persona
+    \item \textit{Replay attack}, registrando la voce della vittima
+    \item \textit{Voice conversion}
+    \item \textit{Sintetizzazione del discorso}, text to speech
+    \item \textit{Artificial, non speech like tones}, l’input non è una voce vera ma un segnale
+\end{enumerate}
+
+\paragraph{LipPass}
+Sfrutta i componenti sullo smartphone per poter descrivere il movimento della bocca utilizzando i segnali acustici che rimbalzano sul viso.
+
+\newpage
