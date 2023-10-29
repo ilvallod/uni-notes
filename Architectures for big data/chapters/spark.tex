@@ -1,0 +1,96 @@
+\section{Apache Spark}
+Apache Spark allows developers to run multiple tasks in parallel across hundreds of machines in a cluster or across multiple cores on a desktop
+
+ It is based on \textit{in-memory computation}, it saves and loads the data in and from the RAM rather than from the disk, which is a big advantage of Apache Spark over several other big data Frameworks. 
+
+%Apache Spark architecture
+\subsection{Apache Spark architecture}
+\begin{itemize}
+    \item \textit{Master}\\
+    It is the only one responsible for negotiating resources with the ResourceManager, based on the resource availability Master schedule tasks. It is created on the same node of driver
+    \item \textit{Driver}\\
+    Driver is a Java process. This is the process where the $main()$ method of our Scala, Java, Python program runs. It executes the user code and creates a SparkSession or SparkContext and it is responsible to create DataFrame, RDD, execute SQL, perform Transformations and Actions.
+    \item \textit{SparkContext}\\
+    Core object for Apache Spark, it’s the only way to create Spark specific type. It's a Singleton created by Spark Driver inside Spark Driver JVM. The gateway point of Spark in Apache functionality is the Spark context, it guides how to access the Spark cluster
+    \item \textit{Worker}\\
+    When a SparkContext is created, each worker starts an executor as a separate process (JVM), and connects back to driver program to receive serialized code
+    \item \textit{Executor}\\
+    Executor resides in the Worker node. Run an individual task and return the result to the Driver. It can cache (persist) the data in the Worker node
+\end{itemize}
+
+\paragraph{Spark is lazy}
+Means that Spark compute the result only when it is needed. \uline{The computations happen only when the driver requires a result to be shown}. The transformations are only actually computed when an action is called, this design enables Spark to run more efficiently
+
+\paragraph{How does spark run}
+\begin{itemize}
+    \item User submits an application using \textit{spark-submit}
+    \item The Driver program will be launched inside Application Master
+    \item Spark Driver Program will communicate with the Resource Manager
+    \item Resource Manager will then allocate containers and Spark Driver Program would start Executors on all the allocated containers and assigns tasks to run
+    \item All the Executors will communicate directly with the Spark Driver program and the output from all the executors will be collected by the driver
+    \item Once the tasks are finished on each of the executors, the driver program will call $SparkContext.stop()$ method which will terminate the executors and release the underlying resources
+\end{itemize}
+
+\paragraph{Basic spark memory management}
+\begin{itemize}
+    \item Execution memory: used for computations during tasks like sorting, aggregations, and joins
+    \item Storage memory: used for caching and circulating data across the cluster
+    \item User memory: used to store data required for RDD conversion
+    \item Reserved memory: used to reserve space for Spark's internal objects
+\end{itemize}
+Execution and Storage memory share a unified region in Spark. This means that when no computations are taking place, storage can utilize all available memory, and vice versa.
+
+\paragraph{Spark job}
+Each Spark job contains one or more actions, which are split into stages to achieve parallelism. These stages are further split into tasks, which are spread across the executors. Each task handles a subset of the data and can run in parallel.
+
+\paragraph{Transformations and actions}
+\begin{itemize}
+    \item \textit{Transformations}: Transformations are added to the directed acyclic graph (DAG) and don’t return results until an Action is invoked. A transformations creates a new dataset from an existing one. Some available transformations are \textit{.map()}; \textit{.filter()}; \textit{.join()}; \textit{.reduceByKey()}; \textit{.cartesian()}
+
+    It assumes that the transformations are deterministic and stateless, meaning the output depends only on the input and not on any external state and that the transformations are lazy, meaning they will not be executed until an action is called.
+    \item \textit{Actions}: return a value after running a computation on an RDD, is one of the way to send result from Executors to the Driver. Some available action are \textit{.collect()}; \textit{.count()}; \textit{.stats()}
+\end{itemize}
+
+\paragraph{Resilient Distributed Database} 
+RDD is a highly restricted shared memory model, that is, RDD is a read-only partition record collection, so it cannot be modified. So, we apply an operation and store results in another RDD. 
+
+There are two ways to create RDDs: parallelizing an existing collection in your driver program, or referencing a dataset in an external storage system
+
+Is based on the idea of distributed object. This means, it stores the state of memory as an object across the jobs and the object is sharable between those jobs
+
+\paragraph{Shared variables}
+Store small variables and share that all over Spark. When a cluster executor is sent a task by the driver, each node of the cluster receives a copy of shared variables. Spark supports two types of shared variables
+\begin{itemize}
+    \item \textit{Broadcast}, read-only values once on all nodes. For example, shared dictionary in memory to lookup
+    \item \textit{Accumulator}, write-only variables. Allow you to count something in a distributed way.
+\end{itemize}
+
+\paragraph{Dataframe} 
+Dataframes were introduced with a high-level library called \textit{spark-SQL}. DataFrame is very popular especially because it is user-friendly, easy to use, very expressive (similarly to SQL). Logically, a DataFrame is an immutable set of records organized into named columns. It shares similarities with a table in RDBMS.
+
+DataFrames can be constructed from a wide array of sources such as: structured data files, external databases, or existing RDDs. Similar to RDDs, Dataframes are evaluated lazily
+
+
+%Natural Language Processing
+\subsection{Natural Language Processing}
+
+\paragraph{Bag of word}
+Express document in a quantitative way. Mathematical representation of the text, as a vector
+
+\paragraph{Cosine similarity}
+Create a metric to compute how similar they are. The distance is computed as the cosine of the angle between two vector. Using cosine you’ve fixed minimum and maximum. The more the cosine similarity is close to $1$ the more two text are similar
+    
+$$\frac{\sum a_i * b_i}{\sqrt{\sum a^2_i} * \sqrt{\sum b^2_i}}$$
+
+It's just the sum of the frequency of each term in both text divided by the norm of first text times the norm of the second text, where a $=$ given text; i $=$ token
+
+\paragraph{TF-IDF}
+Is a measure of originality of a word by comparing the number of times a word appears in a doc with the number of docs the word appears in. The idea behind this behavior is to give more importance to terms that appear in the document but are generally infrequent
+
+$$TF-IDF = TF(t,d) * IDF(t)$$
+
+Where $TF(t,d)$ (Term Frequency) represents the frequency of a word in a document, and is calculated as the number of times a word appears in the document divided by the total number of words in the document.
+
+$IDF(t)$ (Inverse Document Frequency) represents the rarity of the word in the set of documents, and is calculated as the logarithm of the ratio between the total number of documents and the number of documents that contain the word
+
+\newpage

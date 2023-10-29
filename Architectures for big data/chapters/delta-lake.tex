@@ -1,0 +1,28 @@
+\section{Delta lake}
+Delta Lake aims to ensure ACID properties on HDFS, therefore on distributed storage.
+
+\paragraph{Transaction} 
+Sequence of operations satisfying ACID properties
+
+\paragraph{ACID properties} 
+Properties that are necessary to ensure transactionality
+\begin{itemize}
+    \item \textit{Atomicity}, each operation of a transaction is atomic
+    \item \textit{Consistency}, a transaction must maintain the consistency of the system
+    \item \textit{Isolation}, concurrent executions lead to the same result as sequential executions
+    \item \textit{Durability}, a transaction cannot be restored after a commit
+\end{itemize}
+
+\paragraph{Transacion logs} History of the operations performed by a database, can be useful for rollbacks in cases where some transactions have failed
+
+\paragraph{Log shipping} Logs can be sent to a server to replicate the state of the database and have an exact copy of the system
+
+\paragraph{Delta Lake features}
+\begin{itemize}
+    \item \textit{Time travel}, possibility of returning the storage state to a specific time snapshot
+    \item \textit{UPSERT, DELETE and MERGE}
+    \item \textit{Efficient streaming}, information is written quickly since it is divided into small blocks. Blocks are joined together later to speed up readings
+    \item \textit{Caching}, cluster nodes can cache information
+\end{itemize}
+
+\newpage

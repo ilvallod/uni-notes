@@ -1,0 +1,58 @@
+\documentclass[a4paper]{article}
+%--------------------------- package
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    filecolor=black,      
+    urlcolor=black,
+}
+\usepackage{booktabs}
+\usepackage{ulem}
+\usepackage{graphicx}
+\usepackage{comment}
+\usepackage{minted}
+\usepackage{tikz}
+%---------------------------
+%----------------------------------- theorem
+\newtheorem{definition}{Definition}
+%-----------------------------------
+%-------------------------------------- title and settings
+\title{\textbf{Achitectures for big data}
+\\[1cm]
+\includegraphics[scale=0.12]{images/logo_unimi.png}
+\\[1cm]
+\large 
+    University of Milan\\
+    Master's Degree in Computer Science\\
+    A.Y. 2022/2023
+}
+\date{} %hide date
+\author{Stefano Vallodoro}
+\begin{document}
+\maketitle
+\newpage
+\tableofcontents
+\newpage
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.8em}
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+%--------------------------------------
+%------------------------------------ chapters
+\input{chapters/architectures}
+\input{chapters/design-patterns}
+\input{chapters/mapreduce.tex}
+\input{chapters/hadoop.tex}
+\input{chapters/spark.tex}
+\input{chapters/spark-to-sql.tex}
+\input{chapters/delta-lake.tex}
+\input{chapters/soa}
+\input{chapters/data-to-money}
+%------------------------------------
+
+
+\end{document}

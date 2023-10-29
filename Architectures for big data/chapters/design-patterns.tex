@@ -1,0 +1,118 @@
+\section{Design patterns}
+\begin{definition}
+Formalization of a best practice to solve a common
+problem
+\end{definition}
+
+\paragraph{Vendor lock-in}
+Vendor lock-in makes a customer dependent on a vendor
+for products and services, unable to use another vendor without substantial switching costs. A supplier successfully locks in a customer when:
+\begin{itemize}
+    \item the cost of changing supplier is higher that the cost of keeping it
+    \item without that cost, other suppliers can outperform the actual supplier
+\end{itemize}
+
+\paragraph{Knowledge lock-in}
+This kind of lock-in happens when the cost of knowledge transfer is higher than the benefit to dismiss a person/team. Again, a Software Architecture can mitigate this risk.
+\uline{Avoid the lock-in is the most important challenge for many software architect}.
+
+\paragraph{ETL}
+Extract Transform Load involves extracting data from one or more sources, cleaning it up, and then loading it into an output container, which may also have multiple destinations. ETL helps reduce data size and improve quality and consistency by allowing for various transformations. The process can be done all at once or incrementally.
+
+\paragraph{Datalake}
+The idea of a Datalake is to have a place to save structured data, obtained from a certain source in unstructured form. On a datalake you only save, you do not delete anything, when a datum changes you insert its modified version. 
+    
+This approach changes the ETL pattern in ELT, Extract and Load to save to datalake, while at a later time Transforms the data according to the usage. The problem in performing ETL immediately is one in which discarded information is often no longer available
+
+\paragraph{Log Data}
+Table that follows a \textit{chrono sequence}, recording events in the order they occur. In these tables past events cannot be undone, they only allow INSERT transactions. Each event is time-stamped. Example: buy/sell transactions of a company.
+
+\paragraph{Registry Data}
+A registry data tables describe entities could change over time. There isn’t the idea of chrono sequence, all the
+$4$ main verbs (SELECT, INSERT, UPDATE, DELETE ) can be used on it. Example: Bill Of Material 
+
+%Change Data Capture
+\subsection{Change Data Capture}
+Is a set of design patterns used to determine (and track) the data that has changed.
+\begin{itemize}
+    \item Eliminates the need for bulk load updating and inconvenient batch windows by enabling incremental loading or real-time streaming of data changes into your target repository
+    \item CDC ensures that data in multiple systems stays in sync
+\end{itemize}
+
+%Traditional
+\subsubsection{Traditional}
+\paragraph{Invasive database-side}
+\begin{itemize}
+    \item \textit{Timestamp on rows}, timestamp of when it happened is added as last update value. The log table only uses this type because there is already a timestamp in the table. The registry needs to add a 'lastUpdate' column, which results in slower insertions and updates
+    \item \textit{Version number on rows}, timestamp could be a number. When a change happens, a version $+1$ values is added to the fresh columns. To retrieve the data we need an inner query
+    \item \textit{Status indicator}, boolean status. If we have multiple processes we don't know w.r.t. which process is true
+    \item \textit{Triggers on table}, a trigger\footnote{Query or code that is executed automatically from the database when a condition happen} is created after any write on the table. They degrade performance for both logs and registries
+\end{itemize}
+
+\paragraph{Invasive application-side}
+We request that the application perform a replication of every database statement such as \textit{INSERT} or \textit{UPDATE} in a temporary table
+
+\paragraph{Invasive database CPU-side}
+\begin{itemize}
+    \item \textit{Transaction log scanner}, is technical log of the database itself used for the rollback
+    \item \textit{Log shipping}, automatic DB backup
+\end{itemize}
+
+%Diff&Where
+\subsubsection{Diff\&Where}
+Based on the idea that only two kind of data exists: log data; registry data
+
+This pattern is based on
+\begin{itemize}
+    \item \textit{where-like}, strategy to deal with log like sources. We save the last created value and do the query with that condition
+    \begin{minted}
+    [
+    frame=lines,
+    framesep=2mm,
+    baselinestretch=1.2,
+    bgcolor=white,
+    fontsize=\footnotesize,
+    linenos
+    ]{SQL}
+    SELECT * FROM [ TableName ]
+    WHERE Timestamp > MAX_TS
+    ORDER BY Timestamp
+    \end{minted}
+    \item \textit{diff-like}, strategy to deal with registry like sources. It’s like the diff on git. 
+
+    I need to make a full table scan, fetch each line one by one comparing with the \textit{KHASH-HASH} list generated in the previous iteration. I need first to save on a sync file the content. To reduce the space I save only hashed values
+
+    This method involves creating a file with tuples consisting of \textit{Khash} and \textit{Hash} values. Hash represents the hash of all columns in each row except for key column, while Khash represents the hash value of key column values. Firstly perform a full table scan and apply the hash function to identify any new rows. A comparison is then made between the current and previous versions of the table (\_old and \_new) to identify any differences.
+
+    \begin{minted}
+    [
+    frame=lines,
+    framesep=2mm,
+    baselinestretch=1.2,
+    bgcolor=white,
+    fontsize=\footnotesize,
+    linenos
+    ]{python}
+    if Khash_old = Khash_new and Hash_old = Hash_new : do nothing
+    if Khash_old = Khash_new and Hash_old != Hash_new : update
+    if Khash_old not i n Khash_new list : insert
+    else : delete
+    \end{minted}   
+\end{itemize}
+
+%Move and Rename
+\subsection{Move and Rename}
+\paragraph{Stateless Change Data Capture}
+CDC could fail, so you must be able to make a rollback. The idea is to write files in \texttt{.tmp} format to datalake and rename them at the end of the cdc job. On the next iteration, any tmp files, left behind
+by any cdc interruption, are deleted. This why the only real atomic operation is the rename
+\begin{itemize}
+    \item Using temporary filename to automatically tag file just wrote
+    \item Renaming every moved file at once at the end of the writing process
+    \item A clear final step to be executed at the beginning of any job as an automatic rollback
+\end{itemize}
+
+%Adapter
+\subsection{Adapter}
+We implemented a wrapper that serves as a bridge between our application and external services. This wrapper effectively maps all the interfaces of our external service. As a result, our application is designed to only interact with these services through the interfaces exposed by our wrapper. If in the future we decide to switch to a different Data Lake provider, we can simply update the wrapper to accommodate the new integration without needing to modify the entire application. \uline{This is how you can destroy the vendor lock-in}, real impact on the money for your company
+
+\newpage

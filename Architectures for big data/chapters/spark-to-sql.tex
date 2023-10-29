@@ -1,0 +1,36 @@
+\section{Spark to SQL}
+
+\paragraph{Table index} 
+Data structure that increases the read performance of a particular database table, in fact it is not necessary to perform a complete scan but the necessary row is identified immediately, at the cost of additional writes and storage space to maintain it. They can be created using one or more columns from a database table
+
+\paragraph{Creation of an index} 
+Using a \textit{B-tree+} for example, the data are only in the leaves. The data is initially sorted, you choose a root and add data to it, when it is full, you add another child root and proceed.
+
+\paragraph{SQL server architecture}
+How is a SQL Server organized in a physical way? 2 types of files
+\begin{itemize}
+    \item \textit{Data files}, a collection of \textit{extents} 8 pages each of size 8 kilobytes (64 kbytes). Within each individual page you have the header, the address of the next page (so as to create a concatenation of pages). Often each page contains blank space so that rows can be inserted faster
+    \item \textit{Log files}
+\end{itemize}
+
+\paragraph{SQL statement execution}
+The query is converted to packets of type \textit{Tabular Data Stream}. These TDS packets need to be converted by the \textit{query parser} into a set of operations to be done, called \textit{query tree}.
+
+The \textit{query executor} executes the query and requests from the access methods the pages that are involved in the query. If we are talking about non-select queries, the \uline{log and lock logic} intervenes
+\begin{itemize}
+    \item Log manager, is the one who is responsible for keeping track of all the updates completed in the system through the transaction logs
+    \item Lock manager, during the transaction, the data is in the lock state. It guarantees Consistency and Isolation
+\end{itemize}
+
+\paragraph{How to write}
+There are three methods for connecting to a database
+\begin{itemize}
+    \item \textit{Direct connection}, you open a connection with a socket
+    \item \textit{Connection pooling}, connections are kept open and are assigned to clients who request them
+    \item \textit{Pool fragmentation}, each client has its own pool
+\end{itemize}
+In Apache Spark, writing a million rows to a database using a direct connection can result in multiple connections being opened for one worker. If we use a connection pool to send data from the worker to the database, the database can be overloaded and become unresponsive due to keeping the ports busy. Having one database and many workers is not an ideal situation in either case.
+
+To solve the problem of multiple workers writing to SQL, one can write all the information to a Data Lake and then write it in bulk to SQL. The idea is to take advantage of the \textit{BCP}, bulk copy program, to copy all new rows from datalake to SQL, and use MERGE to join them to the old table
+
+\newpage

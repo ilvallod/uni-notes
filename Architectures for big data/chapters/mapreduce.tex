@@ -1,0 +1,8 @@
+\section{MapReduce}
+MapReduce is a programming model that was introduced in a Google paper in $2003$ with the aim of accelerating parallel processing of multiple nodes. It works by combining a \textit{map} function, which transforms the input data into key-value pairs, with a \textit{reduce} function, that merges all intermediate values associated with the same intermediate key.
+
+We starting to split using the key, a key is not a unique key, is something you would like to aggregate. A single key is only on a given node. MapReduce works well if you’re able to reduce the communication between the nodes.
+
+Then apply the reduce. It takes couple of rows with the same key and then apply a function to the two value until couple by couple there’re no more couple of lines with the same key
+
+\newpage

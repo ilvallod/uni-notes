@@ -1,0 +1,48 @@
+\section{Hadoop}
+Hadoop is a framework built to facilitate the development of multi-node services. Core idea behind Hadoop is that \textit{hardware can fail}, so Hadoop is a way to enhance reliability on your cluster. Based on three main components:
+\begin{enumerate}
+    \item \textit{Storage}, HDFS
+    \item \textit{Resource management}, YARN
+    \item \textit{Parallel computation}, MapReduce
+\end{enumerate}
+
+%Hadoop architecture
+\subsection{Hadoop architecture}
+\begin{itemize}
+    \item \textit{Job Tracker}, service that decide where a given task should be executed
+    \item \textit{Task Tracker}, accept the task from a Job Tracker. Each task tracker expose the number of slots that represents its capability of run parallel tasks and send an \textit{heartbeats} and \textit{blockreport} to the Job Tracker every minute to reassure it is still alive.
+    \item \textit{Name node}, it keeps the directory tree of all files in the file system, and tracks where across the cluster the file data is kept. It's the Single Point of Failure of an Hadoop application.
+    \item \textit{Data node}, where data is phisically stored. Each file is stored as a sequence of same sized block, each block is replicated for fault tolerance
+\end{itemize}
+
+HDFS has a master/slave architecture. An HDFS cluster consists of a single NameNode, a master server that regulates access to files by clients. In addition, there are a number of DataNodes, usually one per node in the cluster.
+
+Internally, a file is split into one or more blocks and these blocks are stored in a set of DataNodes. The NameNode executes file system namespace operations like opening, closing, and renaming files and directories. The DataNodes are responsible for serving read and write requests from the file system’s clients
+
+
+%HDFS: Hadoop Distributed File System Storage
+\subsection{HDFS: Hadoop Distributed File System Storage}
+
+\paragraph{Simple Coherency Model}
+HDFS applications need a write-once-read-many access model for files. A file once created, written, and closed need not be changed except for appends and truncates. Appending the content to the end of the files is supported but cannot be updated at arbitrary point. This assumption simplifies data coherency issues and enables high throughput data access
+
+\paragraph{HDFS policy replication}
+Optimizing replica placement distinguishes HDFS from most other distributed file systems improving data reliability, availability, and network bandwidth utilization.
+
+Large HDFS instances run on a cluster of computers that commonly spread across many racks. Communication between two nodes in different racks has to go through switches. The NameNode determines the rack id each DataNode belongs to. In most cases, network bandwidth between machines in the same rack is greater than network bandwidth between machines in different racks
+
+\uline{Rack} is a physical container with internally very high network bandwidth.
+
+\begin{enumerate}
+    \item \textit{Replicate the entire rack}, prevents losing data if an entire rack fails but increases the cost of writes because a write need to transfer block to multiple racks
+    \item \textit{Two rack factor 3 replication placement}, one replica in a Data Node where the writer task is, another replica in a node in a different remote rack and the last in a different node in the same remote rack. In this way improves the write performance
+\end{enumerate}
+
+\paragraph{HDFS reliability} 
+Reliability is the capability of the system to have hardware failure without affecting the functionality.
+
+DataNodes are reliable, because NameNode knows perfectly the status of each DataNode. After long time-out NameNode can replicate on a different DataNode. The real weak point are NameNodes. For this reason there’s a possibility of having configuration of HDFS with more than one node using \textit{QJM}
+
+\uline{Quorum Journal Manager} means that are multiple NameNodes with only one in active state and all the other in stand-by state. The QJM ensures that data is available on other nodes, thus maintaining data consistency across the entire cluster. This increases the availability and security of the data, making it an essential component of HDFS.
+
+\newpage
